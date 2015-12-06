@@ -1,0 +1,16 @@
+<component name="libraryTable">
+  <library name="spring-4.2.3.RELEASE">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../dependencies/spring/spring-context-4.2.3.RELEASE.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../dependencies/spring/spring-core-4.2.3.RELEASE.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../dependencies/spring/spring-beans-4.2.3.RELEASE.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../dependencies/spring/spring-orm-4.2.3.RELEASE.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../dependencies/spring/spring-dao-2.0.8.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../dependencies/spring/spring-aop-4.2.3.RELEASE.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../dependencies/spring/spring-expression-4.2.3.RELEASE.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../dependencies/spring/spring-security-crypto-4.0.3.RELEASE.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

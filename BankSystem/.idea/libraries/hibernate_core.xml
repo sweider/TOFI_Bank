@@ -1,0 +1,19 @@
+<component name="libraryTable">
+  <library name="hibernate-core">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../dependencies/hibernate/antlr-2.7.7.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../dependencies/hibernate/dom4j-1.6.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../dependencies/hibernate/hibernate-commons-annotations-5.0.1.Final.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../dependencies/hibernate/hibernate-core-5.0.5.Final.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../dependencies/hibernate/hibernate-jpa-2.1-api-1.0.0.Final.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../dependencies/hibernate/jandex-2.0.0.Final.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../dependencies/hibernate/javassist-3.18.1-GA.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../dependencies/hibernate/jboss-logging-3.3.0.Final.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../dependencies/hibernate/commons-dbcp2-2.1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../dependencies/hibernate/commons-pool2-2.4.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../dependencies/hibernate/jta-1.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -30,7 +30,7 @@ public abstract class ActiveRecord {
 
     private static SessionFactory sessionFactory;
 
-    private volatile boolean persistInDb;
+    volatile boolean persistInDb;
 
 
     private static final ThreadLocal<Optional<Session>> threadSession = new ThreadLocal<Optional<Session>>(){
@@ -115,23 +115,12 @@ public abstract class ActiveRecord {
      * Пытается найти запись с таки id.
      * @return найденную запись либо null, если запись не найдена
      */
-    protected static final <T> T find(Class<T> clazz, int id) {
-        Optional<Session> optSession = threadSession.get();
-        Session session = optSession.orElse(sessionFactory.openSession());
-        T record;
-        try{
-            record = session.get(clazz, id);
-        }catch(HibernateException ex){
-            record = null;
-            LOGGER.error("Error during getting record of class {} with id{}. Exception is {}",clazz, id, ex);
-        }finally{
-            if(!optSession.isPresent()) { session.close(); }
-        }
-        return record;
+    protected static final <T extends ActiveRecord> Optional<T> find(Class<T> clazz, int id) {
+        return new Filter<>(clazz).find(id);
     }
 
 
-    protected static final <T> T first(Class<T> clazz, Criterion ... restrictions){
+    protected static final <T extends ActiveRecord> Optional<T> first(Class<T> clazz, Criterion ... restrictions){
         return new Filter<>(clazz).where(restrictions).first();
     }
 
@@ -140,12 +129,12 @@ public abstract class ActiveRecord {
      * Если критерии не переданы -- возвращает все найденные записи.
      * Если ни одна запись не удовлетворяет критериям -- возвращает пустой список
      */
-    protected static final <T> List<T> all(Class<T> clazz, Criterion ... restrictions) {
+    protected static final <T extends ActiveRecord> List<T> all(Class<T> clazz, Criterion ... restrictions) {
         return new Filter(clazz).where(restrictions).get();
     }
 
 
-    protected static final <T> Filter<T> filter(Class<T> clazz){
+    protected static final <T extends ActiveRecord> Filter<T> filter(Class<T> clazz){
         return new Filter<>(clazz);
     }
 
@@ -232,7 +221,7 @@ public abstract class ActiveRecord {
         }
     }
 
-    public static class Filter<T>{
+    public static class Filter<T extends ActiveRecord>{
         private final static int NOT_SET = -1;
 
         private final Class<T> clazz;
@@ -285,6 +274,7 @@ public abstract class ActiveRecord {
                 if(this.order != null) { criteria.addOrder(this.order); }
                 if(this.limit != NOT_SET) { criteria.setMaxResults(this.limit); }
                 entries = criteria.list();
+                entries.forEach(entry -> entry.persistInDb = true);
             } catch (HibernateException ex) {
                 LOGGER.error("Error during getting records of class {} for restictions{}. Exception is {}", this.clazz, this.restrictions, ex);
                 entries = new ArrayList<>();
@@ -294,25 +284,26 @@ public abstract class ActiveRecord {
             return entries;
         }
 
-        public T first(){
+        public Optional<T> first(){
             this.limit = 1;
             List<T> list = this.get();
-            return list.isEmpty() ? null : list.get(0);
+            return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
         }
 
-        public T find(int id){
+        public Optional<T> find(int id){
             Optional<Session> optSession = threadSession.get();
             Session session = optSession.orElse(sessionFactory.openSession());
             T record;
             try{
                 record =  session.get(clazz, id);
+                record.persistInDb = true;
             }catch(HibernateException ex){
                 record = null;
                 LOGGER.error("Error during getting record of class {} with id{}. Exception is {}",clazz, id, ex);
             }finally{
                 if(!optSession.isPresent()) { session.close(); }
             }
-            return record;
+            return Optional.ofNullable(record);
         }
 
     }

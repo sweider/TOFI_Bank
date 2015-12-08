@@ -1,8 +1,9 @@
 package by.bsuir.sweider_b.services.authentication;
 
 import by.bsuir.sweider_b.domain.customer.Customer;
+import by.bsuir.sweider_b.domain.employee.Employee;
 import by.bsuir.sweider_b.domain.user.UserCredentials;
-import by.bsuir.sweider_b.services.sessions.SessionToCustomerService;
+import by.bsuir.sweider_b.services.sessions.SessionToUserService;
 import by.bsuir.sweider_b.services.sessions.SessionsExpirationService;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,28 +18,41 @@ import java.util.Optional;
 
 @Service
 public class AuthenticationService {
-    private final static BCryptPasswordEncoder ENCODER = new BCryptPasswordEncoder();
+    @Autowired
+    private BCryptPasswordEncoder ENCODER;
 
     @Autowired
     private SessionsExpirationService sessionsExpirationService;
 
     @Autowired
-    private SessionToCustomerService sessionToCustomerService;
+    private SessionToUserService sessionToUserService;
 
-    public UserDetails authenticateCustomer(UserCredentials credentials) throws AuthenticationException {
+    public AuthenticationResult authenticateCustomer(UserCredentials credentials) throws AuthenticationException {
         String encodedPwd = ENCODER.encode(credentials.getPassword());
         Optional<Customer> optCustomer = Customer.filter()
                                                     .aliasses(new SimpleEntry<>("userCredentials", "uc"))
                                                     .where(Restrictions.eq("uc.login", credentials.getLogin()), Restrictions.eq("uc.password", encodedPwd))
                                                     .first();
-        Customer customer = optCustomer.orElseThrow(() -> new AuthenticationException("Недействительная пара 'Логин':'Пароль'"));
-
+        Customer customer = optCustomer.orElseThrow(AuthenticationException::new);
         String sessionId = ENCODER.encode("customer_" + credentials.getLogin() + encodedPwd);
         this.sessionsExpirationService.putSession(sessionId);
-        this.sessionToCustomerService.putCustomer(sessionId, customer);
+        this.sessionToUserService.putCustomer(sessionId, customer);
 
         UserDetails userDetails = new UserDetails(customer.getCustomerInfo().getPassportData().getName());
-        return userDetails;
+        return new AuthenticationResult(sessionId,userDetails);
+    }
+
+    public AuthenticationResult authenticateEmployee(UserCredentials credentials) throws AuthenticationException {
+        String encodedPwd = ENCODER.encode(credentials.getPassword());
+        Optional<Employee> optEmployee = Employee.filter()
+                .aliasses(new SimpleEntry<String, String>("userCredentials","uc"))
+                .where(Restrictions.eq("uc.login", credentials.getLogin()), Restrictions.eq("uc.password", encodedPwd))
+                .first();
+        Employee employee = optEmployee.orElseThrow(AuthenticationException::new);
+        String sessionId = ENCODER.encode("employee_" + credentials.getLogin() + encodedPwd);
+        this.sessionsExpirationService.putSession(sessionId);
+        this.sessionToUserService.putEmployee(sessionId, employee);
+        return new AuthenticationResult(sessionId, new UserDetails("Employee"));
     }
 
 }

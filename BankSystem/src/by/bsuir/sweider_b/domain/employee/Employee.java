@@ -24,4 +24,8 @@ public class Employee extends ActiveRecord {
 
     @OneToMany
     private List<Review> reviews;
+
+    public static Filter<Employee> filter(){
+        return ActiveRecord.filter(Employee.class);
+    }
 }

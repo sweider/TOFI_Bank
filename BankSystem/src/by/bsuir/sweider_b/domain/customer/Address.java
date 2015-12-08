@@ -11,10 +11,6 @@ import javax.persistence.*;
 @Table(name = "addresses")
 public class Address extends ActiveRecord {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
     @Column(name = "city")
     private String city;
 
@@ -27,10 +23,6 @@ public class Address extends ActiveRecord {
     @Column(name = "street")
     private String room;
 
-    @Override
-    protected void setIdAfterSave(int id) {
-        this.id = id;
-    }
 
     public String getCity() {
         return city;

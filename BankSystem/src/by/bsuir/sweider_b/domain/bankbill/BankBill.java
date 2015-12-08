@@ -11,9 +11,6 @@ import java.util.ArrayList;
 @Entity
 @Table(name = "bank_bills")
 public class BankBill extends ActiveRecord {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
 
     @Column(name = "amount")
     private long amount;
@@ -37,8 +34,4 @@ public class BankBill extends ActiveRecord {
         this.billChanges.add(new BillChange(BillChangeType.SUBTRACTION, amount));
     }
 
-    @Override
-    protected void setIdAfterSave(int id) {
-        this.id = id;
-    }
 }

@@ -1,5 +1,7 @@
 package by.bsuir.sweider_b.domain.bankbill;
 
+import by.bsuir.sweider_b.domain.activerecord.ActiveRecord;
+
 import javax.persistence.*;
 
 /**
@@ -7,10 +9,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "bill_changes")
-public class BillChange {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+public class BillChange extends ActiveRecord{
 
     @Column(name = "change_type")
     @Enumerated(EnumType.STRING)

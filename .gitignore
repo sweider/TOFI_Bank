@@ -29,3 +29,5 @@ local.properties
 .buildpath
 
 BankSystem/.idea/workspace.xml
+*.class
+**/out/**

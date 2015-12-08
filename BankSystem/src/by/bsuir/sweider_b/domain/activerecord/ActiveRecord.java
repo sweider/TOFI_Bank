@@ -21,10 +21,7 @@ import org.hibernate.criterion.Order;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 
 /**
  *
@@ -34,6 +31,7 @@ import javax.persistence.MappedSuperclass;
 public abstract class ActiveRecord {
     private final static Logger LOGGER = LoggerFactory.getLogger(ActiveRecord.class);
     private static SessionFactory sessionFactory;
+    @Transient
     volatile boolean persistInDb;
 
     @Id

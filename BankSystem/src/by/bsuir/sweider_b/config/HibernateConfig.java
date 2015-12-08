@@ -37,9 +37,7 @@ public class HibernateConfig{
     public BasicDataSource getDataSource(Environment env) {
         BasicDataSource ds = new BasicDataSource();
         ds.setDriverClassName("org.postgresql.Driver");
-        StringBuilder sb = new StringBuilder("jdbc:postgresql://");
-        sb.append(env.getProperty("db.ip")).append(":").append(env.getProperty("db.port")).append("/").append(env.getProperty("db.name"));
-        ds.setUrl(sb.toString());
+        ds.setUrl("jdbc:postgresql://" + env.getProperty("db.ip") + ":" + env.getProperty("db.port") + "/" + env.getProperty("db.name"));
         ds.setUsername(env.getProperty("db.username"));
         ds.setPassword(env.getProperty("db.password"));
         return ds;

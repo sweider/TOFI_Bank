@@ -49,7 +49,7 @@ public class UserCredentials extends ActiveRecord {
         return ActiveRecord.filter(UserCredentials.class);
     }
 
-    protected static final List<UserCredentials> all(Criterion... restrictions) {
+    protected static List<UserCredentials> all(Criterion... restrictions) {
         return ActiveRecord.all(UserCredentials.class, restrictions);
     }
 }

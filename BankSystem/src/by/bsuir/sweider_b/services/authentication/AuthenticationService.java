@@ -45,7 +45,7 @@ public class AuthenticationService {
     public AuthenticationResult authenticateEmployee(UserCredentials credentials) throws AuthenticationException {
         String encodedPwd = ENCODER.encode(credentials.getPassword());
         Optional<Employee> optEmployee = Employee.filter()
-                .aliasses(new SimpleEntry<String, String>("userCredentials","uc"))
+                .aliasses(new SimpleEntry<>("userCredentials", "uc"))
                 .where(Restrictions.eq("uc.login", credentials.getLogin()), Restrictions.eq("uc.password", encodedPwd))
                 .first();
         Employee employee = optEmployee.orElseThrow(AuthenticationException::new);

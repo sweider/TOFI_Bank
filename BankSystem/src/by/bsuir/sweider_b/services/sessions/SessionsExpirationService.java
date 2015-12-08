@@ -71,8 +71,8 @@ public class SessionsExpirationService {
     }
 
     private void clean(){
-        Stream<String> expiredStream = this.storage.entrySet().stream().filter(entry -> entry.getValue().isExpired()).map(entry -> entry.getKey());
-        expiredStream.forEach(sessionId -> this.storage.remove(sessionId));
+        Stream<String> expiredStream = this.storage.entrySet().stream().filter(entry -> entry.getValue().isExpired()).map(Map.Entry::getKey);
+        expiredStream.forEach(this.storage::remove);
         this.expirationListeners.forEach( listener -> listener.accept(expiredStream));
     }
 

@@ -53,7 +53,7 @@ public class SessionToUserService {
 
     @PostConstruct
     private void init(){
-        this.sessionsExpirationService.addSessionsExpiredListener(stream -> stream.forEach(sessionId -> this.customersStorage.remove(sessionId)));
+        this.sessionsExpirationService.addSessionsExpiredListener(stream -> stream.forEach(this.customersStorage::remove));
     }
 
 

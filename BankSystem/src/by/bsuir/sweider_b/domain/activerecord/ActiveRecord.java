@@ -31,6 +31,7 @@ import javax.persistence.*;
 public abstract class ActiveRecord {
     private final static Logger LOGGER = LoggerFactory.getLogger(ActiveRecord.class);
     private static SessionFactory sessionFactory;
+
     @Transient
     volatile boolean persistInDb;
 
@@ -39,14 +40,14 @@ public abstract class ActiveRecord {
     private int id;
 
 
-    private static final ThreadLocal<Optional<Session>> threadSession = new ThreadLocal<Optional<Session>>(){
+    private static ThreadLocal<Optional<Session>> threadSession = new ThreadLocal<Optional<Session>>(){
         @Override
         protected Optional<Session> initialValue() {
             return Optional.empty();
         }
     };
 
-    private static final ThreadLocal<Optional<Transaction>> threadTransaction = new ThreadLocal<Optional<Transaction>>(){
+    private static ThreadLocal<Optional<Transaction>> threadTransaction = new ThreadLocal<Optional<Transaction>>(){
         @Override
         protected Optional<Transaction> initialValue() {
             return Optional.empty();
@@ -63,7 +64,7 @@ public abstract class ActiveRecord {
      * @param callable собственно что нужно выполнить.
      * @return результат выполнения переданного Callable
      */
-    public static final <T> T doInSingleTransaction(Callable<T> callable) throws ActiveRecordException {
+    public static <T> T doInSingleTransaction(Callable<T> callable) throws ActiveRecordException {
         final Optional<Session> optSession = threadSession.get();
         Session session = optSession
                 .orElseThrow(() -> new ActiveRecordException("You should wrap this method in ActiveRecord.doInSingleSession call!"));
@@ -94,7 +95,7 @@ public abstract class ActiveRecord {
      * @param callable
      * @throws ActiveRecordException
      */
-    public static final <T> T doInSingleSession(Callable<T> callable) throws ActiveRecordException{
+    public static <T> T doInSingleSession(Callable<T> callable) throws ActiveRecordException{
         final Optional<Session> optSession = threadSession.get();
         if(optSession.isPresent()) { throw new ActiveRecordException("Subsessions not allowed while in single session!"); }
         Session session = sessionFactory.openSession();
@@ -121,12 +122,12 @@ public abstract class ActiveRecord {
      * Пытается найти запись с таки id.
      * @return найденную запись либо null, если запись не найдена
      */
-    protected static final <T extends ActiveRecord> Optional<T> find(Class<T> clazz, int id) {
+    protected static <T extends ActiveRecord> Optional<T> find(Class<T> clazz, int id) {
         return new Filter<>(clazz).find(id);
     }
 
 
-    protected static final <T extends ActiveRecord> Optional<T> first(Class<T> clazz, Criterion ... restrictions){
+    protected static <T extends ActiveRecord> Optional<T> first(Class<T> clazz, Criterion ... restrictions){
         return new Filter<>(clazz).where(restrictions).first();
     }
 
@@ -135,12 +136,12 @@ public abstract class ActiveRecord {
      * Если критерии не переданы -- возвращает все найденные записи.
      * Если ни одна запись не удовлетворяет критериям -- возвращает пустой список
      */
-    protected static final <T extends ActiveRecord> List<T> all(Class<T> clazz, Criterion ... restrictions) {
+    protected static <T extends ActiveRecord> List<T> all(Class<T> clazz, Criterion ... restrictions) {
         return new Filter(clazz).where(restrictions).get();
     }
 
 
-    protected static final <T extends ActiveRecord> Filter<T> filter(Class<T> clazz){
+    protected static <T extends ActiveRecord> Filter<T> filter(Class<T> clazz){
         return new Filter<>(clazz);
     }
 

@@ -22,6 +22,12 @@ public class BankBill extends ActiveRecord {
 
     public BankBill() {
         this.billChanges = new ArrayList<>();
+        this.amount = 0;
+    }
+
+    public BankBill(int amount){
+        this.billChanges = new ArrayList<>();
+        this.amount = amount;
     }
 
     public void addMoney(long amount){

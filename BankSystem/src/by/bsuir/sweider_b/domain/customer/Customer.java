@@ -6,6 +6,7 @@ import by.bsuir.sweider_b.domain.user.UserCredentials;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by sweid on 06.12.2015.
@@ -15,15 +16,14 @@ import java.util.ArrayList;
 public class Customer extends ActiveRecord {
 
 
-    @OneToOne(mappedBy = "user_credentials_id")
+    @OneToOne
     private UserCredentials userCredentials;
 
-    @OneToOne(mappedBy = "customer_info_id")
+    @OneToOne
     private CustomerInfo customerInfo;
 
-    @OneToMany(mappedBy = "CreditApplication")
-    private ArrayList<CreditApplication> creditApplications;
-
+    @OneToMany
+    private List<CreditApplication> creditApplications;
 
 
     public UserCredentials getUserCredentials() {

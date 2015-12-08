@@ -18,6 +18,11 @@ public class BillChange extends ActiveRecord{
     @Column(name = "amount")
     private long amount;
 
+
+    @ManyToOne
+    @JoinColumn(name = "bank_bill_id")
+    private BankBill bankBill;
+
     public BillChange(BillChangeType changeType, long amount) {
         this.changeType = changeType;
         this.amount = amount;

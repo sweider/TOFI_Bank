@@ -28,7 +28,7 @@ public class HibernateConfig{
         LocalSessionFactoryBean bean = new LocalSessionFactoryBean();
         bean.setDataSource(dataSource);
         bean.setHibernateProperties(additionalProperties());
-        bean.setPackagesToScan("by.ugis.autotega.domain");
+        bean.setPackagesToScan("by.bsuir.sweider_b");
         return bean;
     }
 

@@ -11,7 +11,6 @@ import javax.persistence.*;
 @Entity
 @Table(name = "credit_applications")
 public class CreditApplication extends ActiveRecord{
-
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private CreditApplicationStatus status;

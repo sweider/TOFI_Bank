@@ -9,6 +9,6 @@ import org.springframework.context.annotation.Import;
  */
 @Configuration
 @Import(HibernateConfig.class)
-@ComponentScan({"by.bsuir.sweider.b"})
+@ComponentScan({"by.bsuir.sweider_b"})
 public class AppConfig {
 }

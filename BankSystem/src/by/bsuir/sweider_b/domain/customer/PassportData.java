@@ -11,10 +11,6 @@ import javax.persistence.*;
 @Table(name = "passports_data")
 public class PassportData extends ActiveRecord {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
 
     @Column(name = "passportNumber")
     private String passportNumber;
@@ -28,9 +24,6 @@ public class PassportData extends ActiveRecord {
     @Column(name = "lastname")
     private String lastname;
 
-    public int getId(){
-        return this.id;
-    }
 
     public String getPassportNumber() {
         return passportNumber;
@@ -64,8 +57,4 @@ public class PassportData extends ActiveRecord {
         this.lastname = lastname;
     }
 
-    @Override
-    protected void setIdAfterSave(int id) {
-        this.id = id;
-    }
 }

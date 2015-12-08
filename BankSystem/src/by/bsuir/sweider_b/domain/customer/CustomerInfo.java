@@ -11,10 +11,6 @@ import javax.persistence.*;
 @Table(name = "customers_info")
 public class CustomerInfo extends ActiveRecord {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
     @OneToOne
     @JoinColumn(name = "customers_info_id")
     private Address address;
@@ -31,8 +27,4 @@ public class CustomerInfo extends ActiveRecord {
         return passportData;
     }
 
-    @Override
-    protected void setIdAfterSave(int id) {
-        this.id = id;
-    }
 }

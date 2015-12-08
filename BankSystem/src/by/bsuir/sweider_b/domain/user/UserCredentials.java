@@ -5,16 +5,14 @@ import org.hibernate.criterion.Criterion;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by sweid on 06.12.2015.
  */
 @Entity
 @Table(name = "user_credentials")
-public class UserCredentials extends ActiveRecord{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+public class UserCredentials extends ActiveRecord {
 
     @Column(name = "login", nullable = false)
     private String login;
@@ -22,10 +20,6 @@ public class UserCredentials extends ActiveRecord{
     @Column(name = "password", nullable = false)
     private String password;
 
-
-    public int getId(){
-        return this.id;
-    }
 
     public String getLogin() {
         return login;
@@ -43,24 +37,19 @@ public class UserCredentials extends ActiveRecord{
         this.password = password;
     }
 
-    @Override
-    protected void setIdAfterSave(int id) {
-        this.id = id;
+    public static Optional<UserCredentials> find(int id) {
+        return ActiveRecord.find(UserCredentials.class, id);
     }
 
-    public static UserCredentials find(int id){
-        return ActiveRecord.find(UserCredentials.class,id);
-    }
-
-    public static UserCredentials first(Criterion... restrictions){
+    public static Optional<UserCredentials> first(Criterion... restrictions) {
         return ActiveRecord.first(UserCredentials.class, restrictions);
     }
 
-    public static Filter<UserCredentials> filter(){
+    public static Filter<UserCredentials> filter() {
         return ActiveRecord.filter(UserCredentials.class);
     }
 
-    protected static final List<UserCredentials> all(Criterion ... restrictions) {
+    protected static final List<UserCredentials> all(Criterion... restrictions) {
         return ActiveRecord.all(UserCredentials.class, restrictions);
     }
 }

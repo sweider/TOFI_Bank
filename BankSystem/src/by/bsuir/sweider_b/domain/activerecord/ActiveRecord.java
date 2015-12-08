@@ -21,16 +21,24 @@ import org.hibernate.criterion.Order;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
+
 /**
  *
  * @author alex
  */
+@MappedSuperclass
 public abstract class ActiveRecord {
     private final static Logger LOGGER = LoggerFactory.getLogger(ActiveRecord.class);
-
     private static SessionFactory sessionFactory;
-
     volatile boolean persistInDb;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
 
     private static final ThreadLocal<Optional<Session>> threadSession = new ThreadLocal<Optional<Session>>(){
@@ -142,6 +150,10 @@ public abstract class ActiveRecord {
 //</editor-fold>
 
 
+    public int getId(){
+        return this.id;
+    }
+
     /**
      * Сохраняет данную запись в базе.
      * В случае успешного сохранения возвращает true иначе false
@@ -176,12 +188,8 @@ public abstract class ActiveRecord {
         }
     }
 
-    protected abstract void setIdAfterSave(int id);
-
-
     private  void save(Session session){
-        int id = (int) session.save(this);
-        this.setIdAfterSave(id);
+        this.id = (int) session.save(this);
         this.persistInDb = true;
     }
 

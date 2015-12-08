@@ -4,6 +4,8 @@ import by.bsuir.sweider_b.domain.activerecord.ActiveRecord;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by sweid on 06.12.2015.
@@ -16,8 +18,7 @@ public class BankBill extends ActiveRecord {
     private long amount;
 
     @OneToMany
-    @JoinColumn(name = "bill_history_id")
-    private ArrayList<BillChange> billChanges;
+    private List<BillChange> billChanges;
 
     public BankBill() {
         this.billChanges = new ArrayList<>();

@@ -12,11 +12,11 @@ import javax.persistence.*;
 public class CustomerInfo extends ActiveRecord {
 
     @OneToOne
-    @JoinColumn(name = "customers_info_id")
+    @JoinColumn
     private Address address;
 
     @OneToOne
-    @JoinColumn(name = "customers_info_id")
+    @JoinColumn
     private PassportData passportData;
 
     public Address getAddress() {

@@ -20,7 +20,7 @@ public class Address extends ActiveRecord {
     @Column(name = "building")
     private String building;
 
-    @Column(name = "street")
+    @Column(name = "room")
     private String room;
 
 

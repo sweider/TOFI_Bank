@@ -27,12 +27,10 @@ public class AuthenticationService {
 
     public UserDetails authenticateCustomer(UserCredentials credentials) throws AuthenticationException {
         String encodedPwd = ENCODER.encode(credentials.getPassword());
-        Optional<Customer> optCustomer = Optional.ofNullable(
-                Customer.filter()
-                    .aliasses(new SimpleEntry<>("userCredentials", "uc"))
-                    .where(Restrictions.eq("uc.login", credentials.getLogin()), Restrictions.eq("uc.password", encodedPwd))
-                    .first()
-        );
+        Optional<Customer> optCustomer = Customer.filter()
+                                                    .aliasses(new SimpleEntry<>("userCredentials", "uc"))
+                                                    .where(Restrictions.eq("uc.login", credentials.getLogin()), Restrictions.eq("uc.password", encodedPwd))
+                                                    .first();
         Customer customer = optCustomer.orElseThrow(() -> new AuthenticationException("Недействительная пара 'Логин':'Пароль'"));
 
         String sessionId = ENCODER.encode("customer_" + credentials.getLogin() + encodedPwd);

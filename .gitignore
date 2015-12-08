@@ -28,5 +28,6 @@ local.properties
 # PDT-specific
 .buildpath
 
-BankSystem/.idea/workspace.xml
-BankSystem/.idea/workspace.xml
+**/.idea/**
+*.class
+**/out/**

@@ -29,5 +29,5 @@ local.properties
 .buildpath
 
 **/.idea/**
-*.class
+**.class
 **/out/**

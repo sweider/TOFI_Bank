@@ -10,7 +10,6 @@
     <orderEntry type="library" name="spring-4.2.3.RELEASE" level="project" />
     <orderEntry type="library" name="hibernate-core" level="project" />
     <orderEntry type="library" name="logging" level="project" />
-    <orderEntry type="library" name="postgresql-9.4-1206-jdbc42" level="project" />
     <orderEntry type="module-library">
       <library>
         <CLASSES>

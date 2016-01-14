@@ -1,0 +1,15 @@
+.left-menu {
+    -fx-border-color: #e1e1e1;
+    -fx-pref-width: 105;
+    -fx-min-width: 105;
+}
+
+.left-menu-item:hover {
+    -fx-background-color: #dedede;
+    -fx-cursor: HAND;
+}
+
+.left-menu-item_label{
+    -fx-font-size: 12; -fx-text-fill: #585858;
+    -fx-font-weight: bold
+}

@@ -9,6 +9,7 @@
       <root url="jar://$PROJECT_DIR$/../dependencies/spring/spring-aop-4.2.3.RELEASE.jar!/" />
       <root url="jar://$PROJECT_DIR$/../dependencies/spring/spring-expression-4.2.3.RELEASE.jar!/" />
       <root url="jar://$PROJECT_DIR$/../dependencies/spring/spring-security-crypto-4.0.3.RELEASE.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../dependencies/spring/spring-tx-4.2.4.RELEASE.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

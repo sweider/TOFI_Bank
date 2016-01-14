@@ -3,6 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/BankSystem.iml" filepath="$PROJECT_DIR$/BankSystem.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MainGUI/MainGUI.iml" filepath="$PROJECT_DIR$/MainGUI/MainGUI.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Server/Server.iml" filepath="$PROJECT_DIR$/Server/Server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shared/shared.iml" filepath="$PROJECT_DIR$/shared/shared.iml" />
     </modules>
   </component>
 </project>

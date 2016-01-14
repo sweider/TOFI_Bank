@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="postgresql-9.4-1206-jdbc42">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../dependencies/hibernate/postgresql-9.4-1206-jdbc42.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

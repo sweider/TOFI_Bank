@@ -1,3 +1,5 @@
+
+/* LEFT-MENU*/
 .left-menu {
     -fx-border-color: #e1e1e1;
     -fx-pref-width: 105;
@@ -13,3 +15,63 @@
     -fx-font-size: 12; -fx-text-fill: #585858;
     -fx-font-weight: bold
 }
+/* END_LEFT-MENU*/
+
+
+
+/*CREDITS-VIEW*/
+.credit-view_top-label{
+    -fx-font-size: 16;
+
+}
+
+.credit-view {
+    -fx-border-color: #e1e1e1;
+    -fx-pref-height: 250;
+    -fx-min-height: 250;
+    -fx-pref-width: 300;
+    -fx-min-width: 300;
+}
+
+.credit-view_top-container{
+    -fx-alignment: CENTER;
+    -fx-border-color: #e1e1e1;
+}
+
+.credit-view_list-view{
+ -fx-border-color: transparent;
+    -fx-background-color: transparent;
+    -fx-opacity: 0.8;
+}
+
+.list-cell{
+    -fx-background-color: transparent;
+}
+
+.list-cell:filled{
+    -fx-text-fill: #111 0%;
+}
+
+/* END_CREDITS-VIEW*/
+
+
+/* MY-CREDITS */
+
+.my-credits{
+    -fx-padding: 5,5,5,5;
+}
+
+/* END_MY-CREDITS */
+
+
+
+/* NEW-CREDITS */
+
+.new-credit{
+    -fx-padding: 5,5,5,5;
+}
+
+/* END_NEW-CREDITS */
+
+
+

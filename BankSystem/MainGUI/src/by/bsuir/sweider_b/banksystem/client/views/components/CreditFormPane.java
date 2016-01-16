@@ -7,6 +7,6 @@ import javafx.scene.layout.VBox;
  */
 public class CreditFormPane extends VBox {
     public CreditFormPane(){
-        
+
     }
 }

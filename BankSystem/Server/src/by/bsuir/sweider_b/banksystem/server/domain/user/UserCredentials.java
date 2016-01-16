@@ -20,6 +20,13 @@ public class UserCredentials extends ActiveRecord {
     @Column(name = "password", nullable = false)
     private String password;
 
+    private UserCredentials(){};
+
+    public UserCredentials(String login, String passwrord){
+        this.login = login;
+        this.password = passwrord;
+    }
+
 
     public String getLogin() {
         return login;

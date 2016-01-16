@@ -1,0 +1,110 @@
+/*application-container*/
+ .application-container{
+    -fx-pref-with:1360;
+    -fx-pref-height:768;
+    -fx-min-width:800;
+    -fx-min-height:600;
+ }
+/* end application-container*/
+
+/* LEFT-MENU*/
+.left-menu {
+    -fx-border-color: #e1e1e1;
+    -fx-pref-width: 150;
+    -fx-min-width: 150;
+}
+
+.left-menu-item:hover {
+    -fx-background-color: #dedede;
+    -fx-cursor: HAND;
+}
+
+.left-menu-item_label{
+    -fx-font-size: 12; -fx-text-fill: #585858;
+    -fx-font-weight: bold
+}
+
+.left-menu_list-view .list-cell:filled:selected{
+    -fx-background-color: #3354f1;
+    -fx-text-fill: white;
+}
+
+.left-menu_list-view .list-cell:filled:hover{
+    -fx-background-color: #dedede;
+}
+
+/* END_LEFT-MENU*/
+
+
+
+/*CREDITS-VIEW*/
+.credit-view_top-label{
+    -fx-font-size: 16;
+
+}
+
+.credit-view {
+    -fx-border-color: #e1e1e1;
+    -fx-pref-height: 250;
+    -fx-min-height: 250;
+    -fx-pref-width: 300;
+    -fx-min-width: 300;
+}
+
+.credit-view_top-container{
+    -fx-alignment: CENTER;
+    -fx-border-color: #e1e1e1;
+}
+
+.credit-view_list-view{
+ -fx-border-color: transparent;
+    -fx-background-color: transparent;
+    -fx-opacity: 0.8;
+}
+
+.list-cell{
+    -fx-background-color: transparent;
+}
+
+.list-cell:filled{
+    -fx-text-fill: #111 0%;
+}
+
+/* END_CREDITS-VIEW*/
+
+
+/* MY-CREDITS */
+
+.my-credits{
+    -fx-padding: 5,5,5,5;
+}
+
+/* END_MY-CREDITS */
+
+
+
+/* NEW-CREDITS */
+
+.new-credit{
+    -fx-padding: 5,5,5,5;
+}
+
+/* END_NEW-CREDITS */
+
+
+
+
+
+.new-user-form .label{
+    -fx-font-size: 15;
+}
+
+.new-user-form .text-field, new-user-form .password-field{
+    -fx-pref-height: 30;
+    -fx-pref-width: 150;
+}
+
+.new-user-form .new-user-form_header{
+    -fx-font-size: 40;
+}
+

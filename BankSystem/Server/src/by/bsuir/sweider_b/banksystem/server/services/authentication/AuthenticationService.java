@@ -4,10 +4,8 @@ import by.bsuir.sweider_b.banksystem.server.domain.customer.Customer;
 import by.bsuir.sweider_b.banksystem.server.domain.employee.Employee;
 import by.bsuir.sweider_b.banksystem.server.services.sessions.SessionToUserService;
 import by.bsuir.sweider_b.banksystem.server.services.sessions.SessionsExpirationService;
-import by.bsuir.sweider_b.banksystem.shared.services.authentication.AuthenticationException;
-import by.bsuir.sweider_b.banksystem.shared.services.authentication.AuthenticationResult;
-import by.bsuir.sweider_b.banksystem.shared.services.authentication.UserDetails;
-import by.bsuir.sweider_b.banksystem.shared.services.authentication.ICustomerAuthenticationService;
+import by.bsuir.sweider_b.banksystem.shared.model.EmployeeRole;
+import by.bsuir.sweider_b.banksystem.shared.services.authentication.*;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,7 +19,7 @@ import java.util.Optional;
  */
 
 @Service
-public class AuthenticationService  implements ICustomerAuthenticationService {
+public class AuthenticationService  implements ICustomerAuthenticationService, IAdminsAuthenticationService {
     @Autowired
     private BCryptPasswordEncoder ENCODER;
 
@@ -59,4 +57,22 @@ public class AuthenticationService  implements ICustomerAuthenticationService {
         return new AuthenticationResult(sessionId, new UserDetails("Employee"));
     }
 
+    @Override
+    public AuthenticationResult authenticateAdmin(String login, String password) throws AuthenticationException {
+        String encodedPwd = ENCODER.encode(password);
+        Optional<Employee> optEmployee = Employee.filter()
+                .aliasses(new SimpleEntry<>("userCredentials", "uc"))
+                .where(Restrictions.eq("uc.login", login), Restrictions.eq("role", EmployeeRole.ADMIN))
+                .first();
+        Employee employee = optEmployee.orElseThrow(AuthenticationException::new);
+        if(ENCODER.matches(password, employee.getPassword())) {
+            String sessionId = ENCODER.encode("employee_" + login + encodedPwd);
+            this.sessionsExpirationService.putSession(sessionId);
+            this.sessionToUserService.putEmployee(sessionId, employee);
+            return new AuthenticationResult(sessionId, new UserDetails(employee.getLogin()));
+        }
+        else{
+            throw new AuthenticationException();
+        }
+    }
 }

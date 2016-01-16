@@ -36,7 +36,7 @@ public class MainApp extends Application {
         RUNNING_INSTANCE = this;
         this.initializeSpring();
         this.initializeServices();
-        //this.authenticate();
+        this.authenticate();
         initializeApp(primaryStage);
     }
 
@@ -67,6 +67,9 @@ public class MainApp extends Application {
             if(ex instanceof java.net.ConnectException){
                 this.showErrorAlert();
                 System.exit(-1);
+            }
+            else{
+                ex.printStackTrace();
             }
         }
     }

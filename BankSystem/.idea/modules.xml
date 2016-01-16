@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/AdminsGUI/AdminsGUI.iml" filepath="$PROJECT_DIR$/AdminsGUI/AdminsGUI.iml" />
       <module fileurl="file://$PROJECT_DIR$/BankSystem.iml" filepath="$PROJECT_DIR$/BankSystem.iml" />
       <module fileurl="file://$PROJECT_DIR$/MainGUI/MainGUI.iml" filepath="$PROJECT_DIR$/MainGUI/MainGUI.iml" />
       <module fileurl="file://$PROJECT_DIR$/Server/Server.iml" filepath="$PROJECT_DIR$/Server/Server.iml" />

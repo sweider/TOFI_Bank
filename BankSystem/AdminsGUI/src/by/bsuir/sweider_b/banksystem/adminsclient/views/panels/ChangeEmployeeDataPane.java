@@ -3,12 +3,13 @@ package by.bsuir.sweider_b.banksystem.adminsclient.views.panels;
 import by.bsuir.sweider_b.banksystem.adminsclient.AdministrationApp;
 import by.bsuir.sweider_b.banksystem.adminsclient.controllers.CurrentSessionHolder;
 import by.bsuir.sweider_b.banksystem.shared.model.EmployeeRole;
-import by.bsuir.sweider_b.banksystem.shared.services.employee.EmployeeCreationException;
+import by.bsuir.sweider_b.banksystem.shared.services.employee.EmployeeShowDO;
 import by.bsuir.sweider_b.banksystem.shared.services.employee.IEmployeeManagementService;
 import by.bsuir.sweider_b.banksystem.shared.services.employee.NewEmployeeDO;
+import by.bsuir.sweider_b.banksystem.shared.services.employee.UpdatingException;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,92 +19,64 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 /**
- * Created by sweid on 16.01.2016.
+ * Created by sweid on 17.01.2016.
  */
 @Component
-public class NewUserPane extends BorderPane {
+public class ChangeEmployeeDataPane extends VBox {
     @Resource(name = "employeeManager")
     private IEmployeeManagementService employeeManagementService;
 
     @Autowired
     private CurrentSessionHolder sessionHolder;
 
-    private TextField loginField;
-    private PasswordField pwdField;
-    private PasswordField confField;
-    private ComboBox<EmployeeRole> roleField;
-    private Label header;
     private ArrayList<String> validationErrors;
     private TextField nameField;
     private TextField lastNameField;
     private TextField surNameField;
     private TextField passportField;
+    private TextField loginField;
+    private ComboBox<EmployeeRole> roleField;
 
-    public NewUserPane(){
+    private EmployeeShowDO employee;
+    private Button changeBtn;
+    private final Label header;
+
+    public ChangeEmployeeDataPane() {
         this.validationErrors = new ArrayList<>();
-        VBox vbox = getEmployeeForm();
 
-        this.setLeft(vbox);
-    }
+        header = new Label("Изменение данных");
+        header.getStyleClass().add("page-header");
 
-    private VBox getEmployeeForm() {
-        VBox vbox = new VBox();
-        vbox.setPadding(new Insets(5,5,5,30));
-        vbox.getStyleClass().add("new-user-form");
-        vbox.setSpacing(5);
+        this.setSpacing(5);
+        this.setPadding(new Insets(10, 10, 10, 10));
 
-        header = new Label("Новый пользователь");
-        header.getStyleClass().add("new-user-form_header");
-
-        VBox pwdGroup = getPwdGroup();
-
-        VBox confGroup = getConfGroup();
-
-        Button createBtn = new Button("Создать");
-        createBtn.setDefaultButton(true);
-        createBtn.setOnMouseClicked(event ->  sendCreateRequest());
-
-        vbox.getChildren().addAll(
+        this.getChildren().addAll(
                 header,
                 getLoginGroup(),
-                pwdGroup,
-                confGroup,
                 getRoleGroup(),
                 getNameGroup(),
                 getLastNameGroup(),
                 getSurNameGroup(),
                 getPassportGroup(),
-                createBtn
+                getButtonsGroup()
         );
-        vbox.setMaxWidth(500);
-        return vbox;
     }
 
-    private VBox getRoleGroup() {
-        Label label = new Label("Должность");
-        this.roleField = new ComboBox<>();
-        this.roleField.setCellFactory(p -> new EmployeeListCell());
-        this.roleField.setButtonCell(new EmployeeListCell());
-        this.roleField.getItems().addAll(EmployeeRole.values());
-        this.roleField.setValue(EmployeeRole.OPERATOR);
-        this.roleField.prefWidthProperty().bind(header.widthProperty());
-        this.roleField.setPrefHeight(30);
-        return new VBox(label, this.roleField);
+    private HBox getButtonsGroup() {
+        changeBtn = new Button("Изменить");
+        changeBtn.setDefaultButton(true);
+        changeBtn.setOnMouseClicked(event -> sendChangeDataRequest());
+
+        Button backBtn = new Button("Назад");
+        backBtn.setOnMouseClicked(event -> returnToShowPane());
+
+
+        HBox hbox = new HBox();
+        hbox.setSpacing(10);
+        hbox.getChildren().addAll(changeBtn, backBtn);
+        return  hbox;
     }
 
-    private VBox getConfGroup() {
-        Label confLabel = new Label("Подтверждение пароля");
-        this.confField = new PasswordField();
-        this.confField.setPromptText("Введите пароль еще раз");
-        return new VBox(confLabel, this.confField);
-    }
-
-    private VBox getPwdGroup() {
-        Label pwdLabel = new Label("Пароль");
-        this.pwdField = new PasswordField();
-        this.pwdField.setPromptText("Введите пароль");
-        return new VBox(pwdLabel, this.pwdField);
-    }
 
     private VBox getLoginGroup() {
         Label loginLbl = new Label("Логин");
@@ -141,41 +114,58 @@ public class NewUserPane extends BorderPane {
         return new VBox(loginLbl, this.passportField);
     }
 
+    private VBox getRoleGroup() {
+        Label label = new Label("Должность");
+        this.roleField = new ComboBox<>();
+        this.roleField.setCellFactory(p -> new EmployeeListCell());
+        this.roleField.setButtonCell(new EmployeeListCell());
+        this.roleField.getItems().addAll(EmployeeRole.values());
+        this.roleField.setValue(EmployeeRole.OPERATOR);
+        this.roleField.prefWidthProperty().bind(header.widthProperty());
+        this.roleField.setPrefHeight(30);
+        return new VBox(label, this.roleField);
+    }
 
-    private void sendCreateRequest(){
+    private void sendChangeDataRequest() {
         this.blockControls(true);
-        if(this.isDataValid()){
-            NewEmployeeDO data = new NewEmployeeDO(this.loginField.getText(), this.pwdField.getText(), this.roleField.getValue(),
-                    this.passportField.getText(), this.nameField.getText(), this.surNameField.getText(), this.lastNameField.getText());
+        if (this.isDataValid()) {
             try {
-                this.employeeManagementService.createEmployee(sessionHolder.getSessionId(), data);
-                showSuccessMsg();
+                EmployeeShowDO updateData = new EmployeeShowDO(this.employee.getId(), this.loginField.getText(),
+                        this.roleField.getValue(), this.nameField.getText(), this.lastNameField.getText(),
+                        this.surNameField.getText(), this.passportField.getText());
+                this.employeeManagementService.updateEmployeeData(sessionHolder.getSessionId(),  updateData);
+                this.showSuccessMsg();
                 this.clearState();
+                AdministrationApp.APP_CONTEXT.getBean(ShowUsersPanel.class).updateValueFor(this.employee, updateData);
+                this.returnToShowPane();
             } catch (RemoteException e) {
                 AdministrationApp.showRmiExceptionWarning();
                 e.printStackTrace();
-            } catch (EmployeeCreationException e) {
-                showCreationErrorAlert(e);
+            } catch (UpdatingException e) {
+                showUpdatingErrorAlert(e);
             }
-        }
-        else{
+        } else {
             showFormFillingErrorsAlert();
         }
         this.blockControls(false);
+    }
+
+    private void returnToShowPane() {
+        AdministrationApp.APP_CONTEXT.getBean(ShowUsersPanel.class).activateMainPane();
     }
 
     private void showSuccessMsg() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Завершено");
         alert.setHeaderText("Успех!");
-        alert.setContentText("Пользователь успешно создан");
+        alert.setContentText("Данные успешно изменены");
         alert.showAndWait();
     }
 
-    private void showCreationErrorAlert(EmployeeCreationException e) {
+    private void showUpdatingErrorAlert(UpdatingException e) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Ошибка");
-        alert.setHeaderText("Не удалось создать пользователя");
+        alert.setHeaderText("Не удалось изменить данные пользователя");
         alert.setContentText(e.getMessage());
         alert.showAndWait();
     }
@@ -184,43 +174,43 @@ public class NewUserPane extends BorderPane {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Ошибка");
         alert.setHeaderText("При заполнении формы были допущены ошибки");
-        String errorMsg = this.validationErrors.stream().reduce((s, s2) ->  s2 + s + "\n").get();
+        String errorMsg = this.validationErrors.stream().reduce((s, s2) -> s2 + s + "\n").get();
         alert.setContentText(errorMsg);
         alert.showAndWait();
     }
 
     private boolean isDataValid() {
         validationErrors.clear();
-        if(!this.pwdField.getText().equals(this.confField.getText())){
-            validationErrors.add("Введенные пароли не совпадают!");
-        }
-
-        if(this.pwdField.getText().isEmpty() || this.loginField.getText().isEmpty()){
-            validationErrors.add("Все поля должны быть заполнены!");
-        }
+        new Alert(Alert.AlertType.WARNING, "Валидация формы не реализована!");
         return this.validationErrors.isEmpty();
     }
 
-    private void clearState(){
+    private void clearState() {
         this.validationErrors.clear();
         this.loginField.clear();
-        this.pwdField.clear();
-        this.confField.clear();
-        this.roleField.setValue(EmployeeRole.OPERATOR);
         this.nameField.clear();
-        this.lastNameField.clear();
         this.surNameField.clear();
-        this.passportField.clear();
+        this.lastNameField.clear();
+        this.roleField.setValue(EmployeeRole.OPERATOR);
     }
 
-    private void blockControls(boolean value){
+    private void blockControls(boolean value) {
         this.loginField.setDisable(value);
-        this.pwdField.setDisable(value);
-        this.confField.setDisable(value);
-        this.roleField.setDisable(value);
         this.nameField.setDisable(value);
-        this.lastNameField.setDisable(value);
         this.surNameField.setDisable(value);
-        this.passportField.setDisable(value);
+        this.lastNameField.setDisable(value);
+        this.roleField.setDisable(value);
+        this.changeBtn.setDisable(value);
+    }
+
+    public void setEmployee(EmployeeShowDO data) {
+        this.employee = data;
+
+        this.loginField.setText(this.employee.getLogin());
+        this.nameField.setText(this.employee.getName());
+        this.lastNameField.setText(this.employee.getLastName());
+        this.surNameField.setText(this.employee.getSurName());
+        this.roleField.setValue(this.employee.getRole());
+        this.passportField.setText(this.employee.getPassportNmbr());
     }
 }

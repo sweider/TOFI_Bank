@@ -1,4 +1,5 @@
-package by.bsuir.sweider_b.banksystem.adminsclient;/**
+package by.bsuir.sweider_b.banksystem.adminsclient;
+/**
  * Created by sweid on 15.01.2016.
  */
 
@@ -7,6 +8,7 @@ import by.bsuir.sweider_b.banksystem.adminsclient.controllers.CurrentSessionHold
 import by.bsuir.sweider_b.banksystem.adminsclient.views.panels.CreditsManagementPane;
 import by.bsuir.sweider_b.banksystem.adminsclient.views.panels.RootPane;
 import by.bsuir.sweider_b.banksystem.adminsclient.views.panels.NewUserPane;
+import by.bsuir.sweider_b.banksystem.adminsclient.views.panels.ShowUsersPanel;
 import by.bsuir.sweider_b.banksystem.shared.services.authentication.AuthenticationResult;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -85,6 +87,12 @@ public class AdministrationApp extends Application {
         APP_CONTEXT.getBean(RootPane.class).setCenter(creditsPage);
     }
 
+    public void activateShowUsersPage() {
+        ShowUsersPanel panel = APP_CONTEXT.getBean(ShowUsersPanel.class);
+        panel.updateData();
+        APP_CONTEXT.getBean(RootPane.class).setCenter(panel);
+    }
+
     public static void showRmiExceptionWarning(){
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText("Операция не выполнена");
@@ -92,4 +100,6 @@ public class AdministrationApp extends Application {
         alert.setContentText("Во время выполнения запроса произошла сетевая ошибка. Запрос не был выполнен.");
         alert.showAndWait();
     }
+
+
 }

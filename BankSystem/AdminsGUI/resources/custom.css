@@ -10,8 +10,8 @@
 /* LEFT-MENU*/
 .left-menu {
     -fx-border-color: #e1e1e1;
-    -fx-pref-width: 150;
-    -fx-min-width: 150;
+    -fx-pref-width: 165;
+    -fx-min-width: 165;
 }
 
 .left-menu-item:hover {
@@ -25,7 +25,7 @@
 }
 
 .left-menu_list-view .list-cell:filled:selected{
-    -fx-background-color: #3354f1;
+    -fx-background-color: #33aaff;
     -fx-text-fill: white;
 }
 
@@ -106,5 +106,14 @@
 
 .new-user-form .new-user-form_header{
     -fx-font-size: 40;
+}
+
+.page-header{
+    -fx-font-size: 40;
+}
+
+.text-field, .password-field{
+    -fx-pref-height: 30;
+    -fx-pref-width: 150;
 }
 

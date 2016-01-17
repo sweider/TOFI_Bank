@@ -48,7 +48,7 @@ public class SpringContextRefreshedListener {
                 .first();
         if(!optEmployee.isPresent()){
             String default_admin_pwd = encoder.encode("default_admin");
-            if(new Employee("default_admin", default_admin_pwd, EmployeeRole.ADMIN).save()){
+            if(new Employee("default_admin", default_admin_pwd, EmployeeRole.ADMIN, "-", "default_admin", "default_admin","default_admin").save()){
                 LOGGER.info("Injected default admin");
             }
             else {

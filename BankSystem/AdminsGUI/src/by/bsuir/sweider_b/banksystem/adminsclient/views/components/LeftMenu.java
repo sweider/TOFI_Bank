@@ -17,6 +17,7 @@ public class LeftMenu extends Accordion {
         this.getStyleClass().add("left-menu");
         HashMap<String, Delegate> test = new HashMap<>();
         test.put("Создать пользователя", AdministrationApp.RUNNING_INSTANCE::activateNewUserPage);
+        test.put("Просмотреть пользователей", AdministrationApp.RUNNING_INSTANCE::activateShowUsersPage);
 
 
         LeftMenuAccordionPane pane = new LeftMenuAccordionPane("Управление\nпользователями", test);

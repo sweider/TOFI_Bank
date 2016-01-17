@@ -24,6 +24,14 @@ public class PassportData extends ActiveRecord {
     @Column(name = "lastname")
     private String lastname;
 
+    private PassportData(){}
+
+    public PassportData(String passportNumber, String name, String surname, String lastname) {
+        this.passportNumber = passportNumber;
+        this.name = name;
+        this.surname = surname;
+        this.lastname = lastname;
+    }
 
     public String getPassportNumber() {
         return passportNumber;

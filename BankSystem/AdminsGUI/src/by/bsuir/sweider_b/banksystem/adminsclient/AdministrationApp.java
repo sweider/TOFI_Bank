@@ -5,10 +5,12 @@ package by.bsuir.sweider_b.banksystem.adminsclient;
 
 import by.bsuir.sweider_b.banksystem.adminsclient.config.AppConfig;
 import by.bsuir.sweider_b.banksystem.adminsclient.controllers.CurrentSessionHolder;
-import by.bsuir.sweider_b.banksystem.adminsclient.views.panels.CreditsManagementPane;
+import by.bsuir.sweider_b.banksystem.adminsclient.views.panels.credits.CreditsManagementPane;
 import by.bsuir.sweider_b.banksystem.adminsclient.views.panels.RootPane;
-import by.bsuir.sweider_b.banksystem.adminsclient.views.panels.NewUserPane;
-import by.bsuir.sweider_b.banksystem.adminsclient.views.panels.ShowUsersPanel;
+import by.bsuir.sweider_b.banksystem.adminsclient.views.panels.credits.NewCreditFormPane;
+import by.bsuir.sweider_b.banksystem.adminsclient.views.panels.credits.ShowCreditsPane;
+import by.bsuir.sweider_b.banksystem.adminsclient.views.panels.employees.NewUserPane;
+import by.bsuir.sweider_b.banksystem.adminsclient.views.panels.employees.ShowUsersPanel;
 import by.bsuir.sweider_b.banksystem.shared.services.authentication.AuthenticationResult;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -102,4 +104,22 @@ public class AdministrationApp extends Application {
     }
 
 
+    public void activateNewCreditPage() {
+        RootPane root = APP_CONTEXT.getBean(RootPane.class);
+        root.setCenter(APP_CONTEXT.getBean(NewCreditFormPane.class));
+    }
+
+    public void activateShowActiveCreditsPage() {
+        RootPane root = APP_CONTEXT.getBean(RootPane.class);
+        ShowCreditsPane showPane = APP_CONTEXT.getBean(ShowCreditsPane.class);
+        showPane.updateData(true);
+        root.setCenter(showPane);
+    }
+
+    public void activateShowDeactivatedCreditsPage() {
+        RootPane root = APP_CONTEXT.getBean(RootPane.class);
+        ShowCreditsPane showPane = APP_CONTEXT.getBean(ShowCreditsPane.class);
+        showPane.updateData(false);
+        root.setCenter(showPane);
+    }
 }

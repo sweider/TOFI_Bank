@@ -63,4 +63,8 @@ public class CreditObligation extends ActiveRecord {
     public void setNextPaymentDate(Date nextPaymentDate) {
         this.nextPaymentDate = nextPaymentDate;
     }
+
+    public static Filter<CreditObligation> filter(){
+        return ActiveRecord.filter(CreditObligation.class);
+    }
 }

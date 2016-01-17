@@ -15,12 +15,7 @@ public class LeftMenu extends Accordion {
 
     public LeftMenu() {
         this.getStyleClass().add("left-menu");
-        HashMap<String, Delegate> test = new HashMap<>();
-        test.put("Создать пользователя", AdministrationApp.RUNNING_INSTANCE::activateNewUserPage);
-        test.put("Просмотреть пользователей", AdministrationApp.RUNNING_INSTANCE::activateShowUsersPage);
-
-
-        LeftMenuAccordionPane pane = new LeftMenuAccordionPane("Управление\nпользователями", test);
+        LeftMenuAccordionPane pane = getUsersPane();
         MenuItem users = new MenuItem("Управление\nпользователями");
         users.setOnMouseClicked(event -> AdministrationApp.RUNNING_INSTANCE.activateNewUserPage());
 
@@ -28,6 +23,21 @@ public class LeftMenu extends Accordion {
         credits.setOnMouseClicked(event -> AdministrationApp.RUNNING_INSTANCE.activateCreditsManagementsPage());
 
 
-        this.getPanes().addAll(pane);
+        this.getPanes().addAll(pane, getCreditsPane());
+    }
+
+    private LeftMenuAccordionPane getUsersPane() {
+        HashMap<String, Delegate> test = new HashMap<>();
+        test.put("Создать пользователя", AdministrationApp.RUNNING_INSTANCE::activateNewUserPage);
+        test.put("Просмотреть\nпользователей", AdministrationApp.RUNNING_INSTANCE::activateShowUsersPage);
+        return new LeftMenuAccordionPane("Управление\nпользователями", test);
+    }
+
+    private LeftMenuAccordionPane getCreditsPane() {
+        HashMap<String, Delegate> test = new HashMap<>();
+        test.put("Создать кредит", AdministrationApp.RUNNING_INSTANCE::activateNewCreditPage);
+        test.put("Просмотреть\nактивные кредиты", AdministrationApp.RUNNING_INSTANCE::activateShowActiveCreditsPage);
+        test.put("Просмотреть\nнеактивные кредиты", AdministrationApp.RUNNING_INSTANCE::activateShowDeactivatedCreditsPage);
+        return new LeftMenuAccordionPane("Управление\nкредитами", test);
     }
 }

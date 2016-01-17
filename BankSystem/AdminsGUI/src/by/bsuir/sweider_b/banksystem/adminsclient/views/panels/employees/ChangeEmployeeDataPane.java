@@ -1,11 +1,10 @@
-package by.bsuir.sweider_b.banksystem.adminsclient.views.panels;
+package by.bsuir.sweider_b.banksystem.adminsclient.views.panels.employees;
 
 import by.bsuir.sweider_b.banksystem.adminsclient.AdministrationApp;
 import by.bsuir.sweider_b.banksystem.adminsclient.controllers.CurrentSessionHolder;
 import by.bsuir.sweider_b.banksystem.shared.model.EmployeeRole;
 import by.bsuir.sweider_b.banksystem.shared.services.employee.EmployeeShowDO;
 import by.bsuir.sweider_b.banksystem.shared.services.employee.IEmployeeManagementService;
-import by.bsuir.sweider_b.banksystem.shared.services.employee.NewEmployeeDO;
 import by.bsuir.sweider_b.banksystem.shared.services.employee.UpdatingException;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;

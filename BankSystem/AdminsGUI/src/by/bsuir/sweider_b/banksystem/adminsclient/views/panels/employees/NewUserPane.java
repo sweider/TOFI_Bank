@@ -1,4 +1,4 @@
-package by.bsuir.sweider_b.banksystem.adminsclient.views.panels;
+package by.bsuir.sweider_b.banksystem.adminsclient.views.panels.employees;
 
 import by.bsuir.sweider_b.banksystem.adminsclient.AdministrationApp;
 import by.bsuir.sweider_b.banksystem.adminsclient.controllers.CurrentSessionHolder;

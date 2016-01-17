@@ -1,4 +1,4 @@
-package by.bsuir.sweider_b.banksystem.adminsclient.views.panels;
+package by.bsuir.sweider_b.banksystem.adminsclient.views.panels.employees;
 
 import by.bsuir.sweider_b.banksystem.shared.model.EmployeeRole;
 import javafx.scene.control.ListCell;

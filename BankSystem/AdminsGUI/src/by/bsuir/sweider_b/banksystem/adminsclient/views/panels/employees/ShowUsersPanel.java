@@ -1,8 +1,9 @@
-package by.bsuir.sweider_b.banksystem.adminsclient.views.panels;
+package by.bsuir.sweider_b.banksystem.adminsclient.views.panels.employees;
 
 import by.bsuir.sweider_b.banksystem.adminsclient.AdministrationApp;
 import by.bsuir.sweider_b.banksystem.shared.services.employee.EmployeeShowDO;
 import by.bsuir.sweider_b.banksystem.shared.services.employee.IEmployeeManagementService;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -36,6 +37,7 @@ public class ShowUsersPanel extends BorderPane {
     private TableView<EmployeeDataForTable> tableView;
 
     private VBox mainContent;
+    private ContextMenu contextMenu;
 
 
     public ShowUsersPanel() {
@@ -55,7 +57,6 @@ public class ShowUsersPanel extends BorderPane {
             List<EmployeeShowDO> data = this.employeeManagementService.getEmployees();
             this.tableData = data.stream().map(EmployeeDataForTable::new).collect(Collectors.toList());
             this.tableView.setItems(FXCollections.observableArrayList(this.tableData));
-            new Alert(Alert.AlertType.INFORMATION, String.valueOf(data.size())).showAndWait();
         } catch (RemoteException e) {
             e.printStackTrace();
             AdministrationApp.showRmiExceptionWarning();
@@ -78,7 +79,25 @@ public class ShowUsersPanel extends BorderPane {
 
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         table.getColumns().addAll(nameColumn, lastNameColumn, loginColumn, roleColumn);
+        contextMenu = getContextMenu(table);
+        
 
+        table.setRowFactory(param -> {
+            final TableRow<EmployeeDataForTable> row = new TableRow<>();
+            row.contextMenuProperty().bind(
+                    Bindings.when(row.emptyProperty())
+                            .then((ContextMenu) null)
+                            .otherwise(this.contextMenu)
+            );
+
+            return row;
+        });
+
+
+        this.tableView = table;
+    }
+
+    private ContextMenu getContextMenu(TableView<EmployeeDataForTable> table) {
         MenuItem changeData = new MenuItem("Изменить данные");
         changeData.setOnAction(event -> this.showChangeDataForm(table.getSelectionModel().getSelectedItem().getBaseData()));
 
@@ -89,9 +108,8 @@ public class ShowUsersPanel extends BorderPane {
         MenuItem deactivate = new MenuItem("Деактивировать");
         deactivate.setOnAction(event -> this.sendDeactivationRequest(table.getSelectionModel().getSelectedItem().getBaseData().getId()));
 
-        table.setContextMenu(new ContextMenu(changeData, changePwd, deactivate));
 
-        this.tableView = table;
+        return new ContextMenu(changeData, changePwd, deactivate);
     }
 
     private void showChangeDataForm(EmployeeShowDO baseData) {
@@ -131,6 +149,7 @@ public class ShowUsersPanel extends BorderPane {
             }
         }
         int index = this.tableView.getItems().indexOf(empl);
+        this.tableView.getItems().remove(index);
         this.tableView.getItems().set(index, new EmployeeDataForTable(newValue));
     }
 

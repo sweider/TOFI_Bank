@@ -35,6 +35,7 @@ public class SpringContextRefreshedListener {
         try {
             this.injectSessionFactoryToActiveRecord(ctx);
             this.injectDefaultAdmin(ctx);
+            this.injectDefaultOperator(ctx);
         } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException ex) {
             LOGGER.error("Failed to set session factory to active record.", ex);
         }
@@ -64,6 +65,23 @@ public class SpringContextRefreshedListener {
             field.setAccessible(true);
             field.set(null, sf);
             field.setAccessible(false);
+        }
+    }
+
+    private void injectDefaultOperator(ApplicationContext ctx) {
+        BCryptPasswordEncoder encoder = ctx.getBean(BCryptPasswordEncoder.class);
+        Optional<Employee>  optEmployee = Employee.filter()
+                .aliasses(new AbstractMap.SimpleEntry<>("userCredentials", "uc"))
+                .where(Restrictions.eq("uc.login", "operator"))
+                .first();
+        if(!optEmployee.isPresent()){
+            String perator_pwd = encoder.encode("operator");
+            if(new Employee("operator", perator_pwd, EmployeeRole.OPERATOR, "-", "operator", "operator","operator").save()){
+                LOGGER.info("Injected default operator");
+            }
+            else {
+                LOGGER.error("Failed to inject default operator");
+            }
         }
     }
 }

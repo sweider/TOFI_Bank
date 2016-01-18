@@ -2,6 +2,8 @@ package by.bsuir.sweider_b.banksystem.adminsclient.views.panels.employees;
 
 import by.bsuir.sweider_b.banksystem.adminsclient.AdministrationApp;
 import by.bsuir.sweider_b.banksystem.adminsclient.controllers.CurrentSessionHolder;
+import by.bsuir.sweider_b.banksystem.adminsclient.views.components.RussianTextOnlyField;
+import by.bsuir.sweider_b.banksystem.shared.Patterns;
 import by.bsuir.sweider_b.banksystem.shared.model.EmployeeRole;
 import by.bsuir.sweider_b.banksystem.shared.services.employee.EmployeeShowDO;
 import by.bsuir.sweider_b.banksystem.shared.services.employee.IEmployeeManagementService;
@@ -29,9 +31,9 @@ public class ChangeEmployeeDataPane extends VBox {
     private CurrentSessionHolder sessionHolder;
 
     private ArrayList<String> validationErrors;
-    private TextField nameField;
-    private TextField lastNameField;
-    private TextField surNameField;
+    private RussianTextOnlyField nameField;
+    private RussianTextOnlyField lastNameField;
+    private RussianTextOnlyField surNameField;
     private TextField passportField;
     private TextField loginField;
     private ComboBox<EmployeeRole> roleField;
@@ -87,21 +89,21 @@ public class ChangeEmployeeDataPane extends VBox {
 
     private VBox getNameGroup() {
         Label loginLbl = new Label("Имя");
-        this.nameField = new TextField();
+        this.nameField = new RussianTextOnlyField();
         this.nameField.setPromptText("Введите имя");
         return new VBox(loginLbl, this.nameField);
     }
 
     private VBox getLastNameGroup() {
         Label loginLbl = new Label("Фамилия");
-        this.lastNameField = new TextField();
+        this.lastNameField = new RussianTextOnlyField();
         this.lastNameField.setPromptText("Введите фамилию");
         return new VBox(loginLbl, this.lastNameField);
     }
 
     private VBox getSurNameGroup() {
         Label loginLbl = new Label("Отчество");
-        this.surNameField = new TextField();
+        this.surNameField = new RussianTextOnlyField();
         this.surNameField.setPromptText("Введите отчество");
         return new VBox(loginLbl, this.surNameField);
     }
@@ -179,8 +181,34 @@ public class ChangeEmployeeDataPane extends VBox {
     }
 
     private boolean isDataValid() {
-        validationErrors.clear();
-        new Alert(Alert.AlertType.WARNING, "Валидация формы не реализована!");
+        if( this.loginField.getText().isEmpty()
+                || this.nameField.getText().isEmpty()
+                || this.surNameField.getText().isEmpty()
+                || this.lastNameField.getText().isEmpty()
+                || this.passportField.getText().isEmpty()){
+            validationErrors.add("Все поля должны быть заполнены!");
+        }
+        else {
+            if(this.loginField.getText().length() < 5){
+                validationErrors.add("Логин должен быть не короче 5 символов");
+            }
+
+            if(this.nameField.getText().length() < 2){
+                validationErrors.add("Имя должно быть не короче 2 символов");
+            }
+
+            if(this.lastNameField.getText().length() < 4){
+                validationErrors.add("Фамилия должна быть не короче 4 символов");
+            }
+
+            if(this.surNameField.getText().length() < 5){
+                validationErrors.add("Отчество должено быть не короче 5 символов");
+            }
+
+            if (!Patterns.passportNumberPattern.matcher(this.passportField.getText()).matches()) {
+                validationErrors.add("Неверно указан формат номера паспорта!");
+            }
+        }
         return this.validationErrors.isEmpty();
     }
 

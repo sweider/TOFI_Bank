@@ -1,7 +1,6 @@
 package by.bsuir.sweider_b.banksystem.server.domain.credit;
 
 import by.bsuir.sweider_b.banksystem.server.domain.activerecord.ActiveRecord;
-import by.bsuir.sweider_b.banksystem.shared.services.credits.PaymentType;
 
 import javax.persistence.*;
 import java.util.Optional;
@@ -25,14 +24,17 @@ public class CreditKind extends ActiveRecord{
     private long minMoneyAmount;
 
     @Column(name = "max_money_amount")
-    private long maxMonewAmount;
+    private long maxMoneyAmount;
 
-    @Column(name = "is_prepayment_allowed")
-    private boolean isPrepaymentAllowed;
-
-    @Column(name = "payment_type")
-    @Enumerated(EnumType.STRING)
-    private PaymentType paymentType;
+    @Column(name = "percents")
+    private int percents;
+//
+//    @Column(name = "is_prepayment_allowed")
+//    private boolean isPrepaymentAllowed;
+//
+//    @Column(name = "payment_type")
+//    @Enumerated(EnumType.STRING)
+//    private PaymentType paymentType;
 
     @Column(name = "is_active")
     private boolean isActive;
@@ -40,15 +42,21 @@ public class CreditKind extends ActiveRecord{
 
     private CreditKind(){}
 
-    public CreditKind(String name, String description, int durationInMonth, long minAmount, long maxAmount, boolean isPrepaymentAllowed, PaymentType paymentType){
+    public CreditKind(String name, String description, int durationInMonth, long minAmount, long maxAmount,int percents){
         this.name = name;
         this.description = description;
         this.durationInMonth = durationInMonth;
-        this.maxMonewAmount = maxAmount;
+        this.maxMoneyAmount = maxAmount;
         this.minMoneyAmount = minAmount;
-        this.isPrepaymentAllowed = isPrepaymentAllowed;
-        this.paymentType = paymentType;
+        this.percents = percents;
+//        this.isPrepaymentAllowed = isPrepaymentAllowed;
+//        this.paymentType = paymentType;
         this.setActive(true);
+    }
+
+
+    public int getPercents() {
+        return percents;
     }
 
     public boolean isActive(){
@@ -75,17 +83,17 @@ public class CreditKind extends ActiveRecord{
         return minMoneyAmount;
     }
 
-    public long getMaxMonewAmount() {
-        return maxMonewAmount;
+    public long getMaxMoneyAmount() {
+        return maxMoneyAmount;
     }
 
-    public boolean isPrepaymentAllowed() {
-        return isPrepaymentAllowed;
-    }
-
-    public PaymentType getPaymentType() {
-        return paymentType;
-    }
+//    public boolean isPrepaymentAllowed() {
+//        return isPrepaymentAllowed;
+//    }
+//
+//    public PaymentType getPaymentType() {
+//        return paymentType;
+//    }
 
     public void setDescription(String desc){
         this.description = desc;

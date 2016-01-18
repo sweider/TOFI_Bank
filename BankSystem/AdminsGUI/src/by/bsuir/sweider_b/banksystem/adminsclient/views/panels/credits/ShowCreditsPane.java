@@ -3,7 +3,7 @@ package by.bsuir.sweider_b.banksystem.adminsclient.views.panels.credits;
 import by.bsuir.sweider_b.banksystem.adminsclient.AdministrationApp;
 import by.bsuir.sweider_b.banksystem.adminsclient.controllers.CurrentSessionHolder;
 import by.bsuir.sweider_b.banksystem.adminsclient.views.panels.employees.ChangePasswordPane;
-import by.bsuir.sweider_b.banksystem.shared.services.credits.CreditShowObject;
+import by.bsuir.sweider_b.banksystem.shared.services.credits.CreditKindDO;
 import by.bsuir.sweider_b.banksystem.shared.services.credits.CreditUpdateException;
 import by.bsuir.sweider_b.banksystem.shared.services.credits.ICreditManagementService;
 import javafx.beans.binding.Bindings;
@@ -16,7 +16,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import javafx.util.Callback;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -64,7 +63,7 @@ public class ShowCreditsPane extends BorderPane {
 
     public void updateData(boolean isForActive) {
         try {
-            List<CreditShowObject> data = this.creditManagementService.getCredits(this.sessionHolder.getSessionId(), isForActive);
+            List<CreditKindDO> data = this.creditManagementService.getCreditKinds(this.sessionHolder.getSessionId(), isForActive);
             this.tableData = data.stream().map(CreditDataForTable::new).collect(Collectors.toList());
             this.tableView.setItems(FXCollections.observableArrayList(this.tableData));
             this.updateContextMenu(isForActive);
@@ -92,6 +91,10 @@ public class ShowCreditsPane extends BorderPane {
 
         TableColumn<CreditDataForTable, Integer> length = new TableColumn<>("Срок");
         length.setCellValueFactory(new PropertyValueFactory<>("length"));
+
+
+        TableColumn<CreditDataForTable, Integer> percents = new TableColumn<>("Ставка %");
+        percents.setCellValueFactory(new PropertyValueFactory<>("percents"));
 
         TableColumn<CreditDataForTable, Integer> count = new TableColumn<>("Выдано");
         count.setCellValueFactory(new PropertyValueFactory<>("count"));
@@ -123,7 +126,7 @@ public class ShowCreditsPane extends BorderPane {
         return new MenuItem[]{changeData, changeState};
     }
 
-    public void updateCredit(CreditShowObject data){
+    public void updateCredit(CreditKindDO data){
         for(CreditDataForTable item : this.tableView.getItems()){
             if(item.getBaseData().getId() == data.getId()){
                 item.initProperties(data);
@@ -133,7 +136,7 @@ public class ShowCreditsPane extends BorderPane {
 
     }
 
-    private void showChangeDataForm(CreditShowObject baseData) {
+    private void showChangeDataForm(CreditKindDO baseData) {
         this.editDescriptionPane.setData(baseData);
         this.setCenter(null);
         this.setLeft(this.editDescriptionPane);
@@ -141,7 +144,7 @@ public class ShowCreditsPane extends BorderPane {
 
     private void sendChangeStateRequest(CreditDataForTable credit, boolean newState) {
         try {
-            this.creditManagementService.changeCreditActiveState(this.sessionHolder.getSessionId(), credit.getBaseData().getId(), newState);
+            this.creditManagementService.changeCreditKindActiveState(this.sessionHolder.getSessionId(), credit.getBaseData().getId(), newState);
             this.tableView.getItems().remove(credit);
             this.showSuccessChangeStateMsg();
         } catch (RemoteException e) {
@@ -176,23 +179,33 @@ public class ShowCreditsPane extends BorderPane {
         private SimpleLongProperty maxAmount;
         private SimpleIntegerProperty length;
         private SimpleIntegerProperty count;
-        private CreditShowObject baseData;
+        private SimpleIntegerProperty percents;
+        private CreditKindDO baseData;
 
-        public CreditDataForTable(CreditShowObject data) {
+        public CreditDataForTable(CreditKindDO data) {
             initProperties(data);
         }
 
-        private void initProperties(CreditShowObject data) {
+        private void initProperties(CreditKindDO data) {
             this.name = new SimpleStringProperty(data.getTitle());
             this.minAmount = new SimpleLongProperty(data.getMin());
             this.length = new SimpleIntegerProperty(data.getLenght());
             this.minAmount = new SimpleLongProperty(data.getMin());
             this.maxAmount = new SimpleLongProperty(data.getMax());
             this.count = new SimpleIntegerProperty(data.getCount());
+            this.percents = new SimpleIntegerProperty(data.getPercent());
             this.baseData = data;
         }
 
-        public void updateBaseData(CreditShowObject baseData) {
+        public int getPercents() {
+            return percents.get();
+        }
+
+        public SimpleIntegerProperty percentsProperty() {
+            return percents;
+        }
+
+        public void updateBaseData(CreditKindDO baseData) {
             this.initProperties(baseData);
 
         }
@@ -237,7 +250,7 @@ public class ShowCreditsPane extends BorderPane {
             return length;
         }
 
-        public CreditShowObject getBaseData() {
+        public CreditKindDO getBaseData() {
             return baseData;
         }
     }

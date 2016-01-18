@@ -3,15 +3,11 @@ package by.bsuir.sweider_b.banksystem.adminsclient.views.panels.credits;
 import by.bsuir.sweider_b.banksystem.adminsclient.AdministrationApp;
 import by.bsuir.sweider_b.banksystem.adminsclient.controllers.CurrentSessionHolder;
 import by.bsuir.sweider_b.banksystem.adminsclient.views.components.NumericTextField;
-import by.bsuir.sweider_b.banksystem.adminsclient.views.panels.employees.EmployeeListCell;
-import by.bsuir.sweider_b.banksystem.shared.model.EmployeeRole;
+import by.bsuir.sweider_b.banksystem.adminsclient.views.components.RussianTextOnlyField;
 import by.bsuir.sweider_b.banksystem.shared.services.credits.CreditCreationException;
 import by.bsuir.sweider_b.banksystem.shared.services.credits.ICreditManagementService;
-import by.bsuir.sweider_b.banksystem.shared.services.credits.PaymentType;
-import by.bsuir.sweider_b.banksystem.shared.services.employee.EmployeeCreationException;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,13 +29,12 @@ public class NewCreditFormPane extends BorderPane{
     private CurrentSessionHolder sessionHolder;
 
 
-    private TextField titleField;
+    private RussianTextOnlyField titleField;
     private TextArea descriptionField;
     private NumericTextField lengthInMonthField;
     private NumericTextField minMoneyAmountField;
     private NumericTextField maxMoneyAmountField;
-    private ComboBox<PaymentType> paymentTypeComboBox;
-    private CheckBox prepaymentCheckBox;
+    private NumericTextField percentsField;
 
     private ArrayList<String> validationErrors;
     private final Button createBtn;
@@ -47,6 +42,7 @@ public class NewCreditFormPane extends BorderPane{
 
 
     public NewCreditFormPane(){
+        this.validationErrors = new ArrayList<>();
         VBox container = new VBox(5);
         header = new Label("Новый кредит");
         header.getStyleClass().add("page-header");
@@ -61,8 +57,7 @@ public class NewCreditFormPane extends BorderPane{
                 getLengthGroup(),
                 getMinMoneyGroup(),
                 getMaxMoneyGroup(),
-                getPaymentTypeGroup(),
-                getPrepaymentGroup(),
+                getPercentsGroup(),
                 createBtn
         );
 
@@ -74,15 +69,14 @@ public class NewCreditFormPane extends BorderPane{
         this.blockControls(true);
         if(this.isValid()){
             try {
-                this.creditManagementService.createCredit(
+                this.creditManagementService.createCreditKind(
                         this.sessionHolder.getSessionId(),
                         this.titleField.getText(),
                         this.descriptionField.getText(),
                         Integer.parseInt(this.lengthInMonthField.getText()),
                         Integer.parseInt(this.minMoneyAmountField.getText()),
                         Integer.parseInt(this.maxMoneyAmountField.getText()),
-                        this.prepaymentCheckBox.isSelected(),
-                        this.paymentTypeComboBox.getValue()
+                        Integer.parseInt(this.percentsField.getText())
                  );
                 this.clearState();
                 this.showSuccessMsg();
@@ -128,7 +122,7 @@ public class NewCreditFormPane extends BorderPane{
     private boolean isValid(){
         this.validationErrors.clear();
         if(titleField.getText().isEmpty() || descriptionField.getText().isEmpty() || lengthInMonthField.getText().isEmpty() ||
-                minMoneyAmountField.getText().isEmpty() || maxMoneyAmountField.getText().isEmpty()){
+                minMoneyAmountField.getText().isEmpty() || maxMoneyAmountField.getText().isEmpty() || this.percentsField.getText().isEmpty()){
             this.validationErrors.add("Все поля должны быть заполнены!");
         }
         else {
@@ -148,8 +142,6 @@ public class NewCreditFormPane extends BorderPane{
         this.lengthInMonthField.setDisable(value);
         this.minMoneyAmountField.setDisable(value);
         this.maxMoneyAmountField.setDisable(value);
-        this.prepaymentCheckBox.setDisable(value);
-        this.paymentTypeComboBox.setDisable(value);
         this.createBtn.setDisable(value);
     }
 
@@ -159,23 +151,29 @@ public class NewCreditFormPane extends BorderPane{
         this.lengthInMonthField.clear();
         this.minMoneyAmountField.clear();
         this.maxMoneyAmountField.clear();
-        this.paymentTypeComboBox.setValue(PaymentType.PERIODLY);
-        this.prepaymentCheckBox.setSelected(false);
+        this.percentsField.clear();
     }
 
 
     private VBox getTitleGroup(){
         Label label = new Label("Название кредита");
-        this.titleField = new TextField();
+        this.titleField = new RussianTextOnlyField();
         this.titleField.setPromptText("Введите название кредита");
         return new VBox(label, this.titleField);
     }
 
-    private VBox getPrepaymentGroup(){
-        this.prepaymentCheckBox = new CheckBox("Возможность досрочного погашения");
-        this.prepaymentCheckBox.setSelected(false);
-        return new VBox(this.prepaymentCheckBox);
+    private VBox getPercentsGroup(){
+        Label label = new Label("Процентная ставка");
+        this.percentsField = new NumericTextField();
+        this.percentsField.setPromptText("Введите процентную ставку");
+        return new VBox(label, this.percentsField);
     }
+//
+//    private VBox getPrepaymentGroup(){
+//        this.prepaymentCheckBox = new CheckBox("Возможность досрочного погашения");
+//        this.prepaymentCheckBox.setSelected(false);
+//        return new VBox(this.prepaymentCheckBox);
+//    }
 
     private VBox getDescriptionGroup(){
         Label label = new Label("Описание кредита");
@@ -206,15 +204,15 @@ public class NewCreditFormPane extends BorderPane{
         return new VBox(label, this.maxMoneyAmountField);
     }
 
-    private VBox getPaymentTypeGroup() {
-        Label label = new Label("Способ погашения");
-        this.paymentTypeComboBox = new ComboBox<>();
-        this.paymentTypeComboBox.setCellFactory(p -> new PaymentTypeListCell());
-        this.paymentTypeComboBox.setButtonCell(new PaymentTypeListCell());
-        this.paymentTypeComboBox.getItems().addAll(PaymentType.values());
-        this.paymentTypeComboBox.setValue(PaymentType.PERIODLY);
-        this.paymentTypeComboBox.prefWidthProperty().bind(this.descriptionField.widthProperty());
-        this.paymentTypeComboBox.setPrefHeight(30);
-        return new VBox(label, this.paymentTypeComboBox);
-    }
+//    private VBox getPaymentTypeGroup() {
+//        Label label = new Label("Способ погашения");
+//        this.paymentTypeComboBox = new ComboBox<>();
+//        this.paymentTypeComboBox.setCellFactory(p -> new PaymentTypeListCell());
+//        this.paymentTypeComboBox.setButtonCell(new PaymentTypeListCell());
+//        this.paymentTypeComboBox.getItems().addAll(PaymentType.values());
+//        this.paymentTypeComboBox.setValue(PaymentType.PERIODLY);
+//        this.paymentTypeComboBox.prefWidthProperty().bind(this.descriptionField.widthProperty());
+//        this.paymentTypeComboBox.setPrefHeight(30);
+//        return new VBox(label, this.paymentTypeComboBox);
+//    }
 }

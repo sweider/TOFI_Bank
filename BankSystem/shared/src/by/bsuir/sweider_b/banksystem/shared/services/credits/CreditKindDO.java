@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by sweid on 17.01.2016.
  */
-public class CreditShowObject implements Serializable {
+public class CreditKindDO implements Serializable {
     private int id;
     private String title;
     private String description;
@@ -13,15 +13,21 @@ public class CreditShowObject implements Serializable {
     private long min;
     private long max;
     private int count;
+    private int percents;
 
-    public CreditShowObject(int id, String title, String description, int lenght, long min, long max, int count) {
+    public CreditKindDO(int id, String title, String description, int length, long min, long max, int percents, int count) {
         this.id = id;
         this.title = title;
         this.description = description;
-        this.lenght = lenght;
+        this.lenght = length;
         this.min = min;
         this.max = max;
         this.count = count;
+        this.percents = percents;
+    }
+
+    public int getPercents() {
+        return percents;
     }
 
     public int getId() {
@@ -54,5 +60,9 @@ public class CreditShowObject implements Serializable {
 
     public int getCount() {
         return count;
+    }
+
+    public int getPercent() {
+        return 0;
     }
 }

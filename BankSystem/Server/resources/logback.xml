@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <appender title="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%msg%n</pattern>
         </encoder>
     </appender>
 
-    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <appender title="FILE" class="ch.qos.logback.core.FileAppender">
         <append>true</append>
         <file>log.log</file>
         <encoder>
@@ -15,7 +15,7 @@
         </encoder>
     </appender>
 
-    <appender name="sql" class="ch.qos.logback.core.FileAppender">
+    <appender title="sql" class="ch.qos.logback.core.FileAppender">
         <append>true</append>
         <file>hib.log</file>
         <encoder>
@@ -23,7 +23,7 @@
         </encoder>
     </appender>
 
-    <appender name="spring" class="ch.qos.logback.core.FileAppender">
+    <appender title="spring" class="ch.qos.logback.core.FileAppender">
         <append>true</append>
         <file>spring.log</file>
         <encoder>
@@ -36,12 +36,12 @@
     </root>
 
 
-    <logger name="org.hibernate">
+    <logger title="org.hibernate">
         <level value="trace"/>
         <appender-ref ref="sql"/>
     </logger>
 
-    <logger name="org.springframework.security">
+    <logger title="org.springframework.security">
         <level value="trace" />
         <appender-ref ref = "spring" />
     </logger>

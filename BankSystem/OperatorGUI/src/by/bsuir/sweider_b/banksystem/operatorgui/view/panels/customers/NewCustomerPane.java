@@ -2,6 +2,8 @@ package by.bsuir.sweider_b.banksystem.operatorgui.view.panels.customers;
 
 import by.bsuir.sweider_b.banksystem.operatorgui.OperatorApp;
 import by.bsuir.sweider_b.banksystem.operatorgui.controllers.CurrentSessionHolder;
+import by.bsuir.sweider_b.banksystem.operatorgui.view.components.RussianTextOnlyField;
+import by.bsuir.sweider_b.banksystem.shared.Patterns;
 import by.bsuir.sweider_b.banksystem.shared.services.customers.CustomerCreationException;
 import by.bsuir.sweider_b.banksystem.shared.services.customers.CustomerDO;
 import by.bsuir.sweider_b.banksystem.shared.services.customers.ICustomersService;
@@ -34,17 +36,18 @@ public class NewCustomerPane extends BorderPane {
     private TextField loginField;
     private PasswordField pwdField;
     private PasswordField confField;
-    private TextField nameField;
-    private TextField lastNameField;
-    private TextField surNameField;
+    private RussianTextOnlyField nameField;
+    private RussianTextOnlyField lastNameField;
+    private RussianTextOnlyField surNameField;
     private TextField passportField;
-    private TextField cityField;
-    private TextField streetField;
+    private RussianTextOnlyField cityField;
+    private RussianTextOnlyField streetField;
     private TextField buildingField;
     private TextField roomField;
     private TextField phoneNumberField;
     private Button createBtn;
-    private Pattern phoneRegexp;
+
+
 
     public NewCustomerPane(){
         this.validationErrors = new ArrayList<>();
@@ -54,7 +57,6 @@ public class NewCustomerPane extends BorderPane {
     }
 
     private VBox getCustomersForm() {
-        phoneRegexp = Pattern.compile("\\+375\\d{9}");
         VBox vbox = new VBox();
         vbox.setPadding(new Insets(5,5,5,30));
         vbox.getStyleClass().add("new-user-form");
@@ -122,21 +124,21 @@ public class NewCustomerPane extends BorderPane {
 
     private VBox getNameGroup() {
         Label loginLbl = new Label("Имя");
-        this.nameField = new TextField();
+        this.nameField = new RussianTextOnlyField();
         this.nameField.setPromptText("Введите имя");
         return new VBox(loginLbl, this.nameField);
     }
 
     private VBox getLastNameGroup() {
         Label loginLbl = new Label("Фамилия");
-        this.lastNameField = new TextField();
+        this.lastNameField = new RussianTextOnlyField();
         this.lastNameField.setPromptText("Введите фамилию");
         return new VBox(loginLbl, this.lastNameField);
     }
 
     private VBox getSurNameGroup() {
         Label loginLbl = new Label("Отчество");
-        this.surNameField = new TextField();
+        this.surNameField = new RussianTextOnlyField();
         this.surNameField.setPromptText("Введите отчество");
         return new VBox(loginLbl, this.surNameField);
     }
@@ -150,14 +152,14 @@ public class NewCustomerPane extends BorderPane {
 
     private VBox getCityGroup() {
         Label loginLbl = new Label("Город");
-        this.cityField = new TextField();
+        this.cityField = new RussianTextOnlyField();
         this.cityField.setPromptText("Введите название города");
         return new VBox(loginLbl, this.cityField);
     }
 
     private VBox getStreetGroup() {
         Label loginLbl = new Label("Улица");
-        this.streetField = new TextField();
+        this.streetField = new RussianTextOnlyField();
         this.streetField.setPromptText("Введите название улицы");
         return new VBox(loginLbl, this.streetField);
     }
@@ -274,8 +276,11 @@ public class NewCustomerPane extends BorderPane {
             if(this.streetField.getText().length() < 3){
                 validationErrors.add("Название улицы должно быть не менее 3 символов.");
             }
-            if(!this.phoneRegexp.matcher(this.phoneNumberField.getText()).matches()){
+            if(!Patterns.phoneRegexp.matcher(this.phoneNumberField.getText()).matches()){
                 validationErrors.add("Номер телефона должен быть в формате +375XXXXXXXXX");
+            }
+            if(!Patterns.passportNumberPattern.matcher(this.passportField.getText()).matches()){
+                validationErrors.add("Неверно указан формат номера паспорта!");
             }
         }
         return this.validationErrors.isEmpty();

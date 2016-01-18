@@ -8,12 +8,12 @@ import java.util.List;
  */
 public interface ICreditManagementService {
     String SERVICE_NAME = "CreditsManagementService";
-    void createCredit(String sessionId, String title, String description, int length, long minSum,
-                      long maxSum, boolean prepayment, PaymentType type) throws RemoteException, CreditCreationException;
+    void createCreditKind(String sessionId, String title, String description, int length, long minSum,
+                          long maxSum, int percents) throws RemoteException, CreditCreationException;
 
-    void updateCredit(String sessionId, int creditId, String newDescription) throws RemoteException, CreditUpdateException;
+    void updateCreditKind(String sessionId, int creditId, String newDescription) throws RemoteException, CreditUpdateException;
 
-    List<CreditShowObject> getCredits(String sessionId, boolean active) throws RemoteException;
+    List<CreditKindDO> getCreditKinds(String sessionId, boolean active) throws RemoteException;
 
-    void changeCreditActiveState(String sessionId, int creditId, boolean newState) throws RemoteException, CreditUpdateException;
+    void changeCreditKindActiveState(String sessionId, int creditId, boolean newState) throws RemoteException, CreditUpdateException;
 }

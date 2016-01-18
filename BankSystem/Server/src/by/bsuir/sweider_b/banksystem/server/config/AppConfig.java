@@ -1,12 +1,14 @@
 package by.bsuir.sweider_b.banksystem.server.config;
 
 import by.bsuir.sweider_b.banksystem.server.services.authentication.AuthenticationService;
+import by.bsuir.sweider_b.banksystem.server.services.credits.CreditsApplicationService;
 import by.bsuir.sweider_b.banksystem.server.services.credits.CreditsManagementService;
 import by.bsuir.sweider_b.banksystem.server.services.customers.CustomersService;
 import by.bsuir.sweider_b.banksystem.server.services.employees.EmployeesService;
 import by.bsuir.sweider_b.banksystem.shared.services.authentication.IAdminsAuthenticationService;
 import by.bsuir.sweider_b.banksystem.shared.services.authentication.ICustomerAuthenticationService;
 import by.bsuir.sweider_b.banksystem.shared.services.authentication.IEmployeeAuthenticationService;
+import by.bsuir.sweider_b.banksystem.shared.services.creditaplications.ICreditAplicatonService;
 import by.bsuir.sweider_b.banksystem.shared.services.credits.ICreditManagementService;
 import by.bsuir.sweider_b.banksystem.shared.services.customers.ICustomersService;
 import by.bsuir.sweider_b.banksystem.shared.services.employee.IEmployeeManagementService;
@@ -97,6 +99,18 @@ public class AppConfig {
         rmiExporter.setServiceName(ICustomersService.SERVICE_NAME);
         rmiExporter.setService(service);
         rmiExporter.setServiceInterface(ICustomersService.class);
+        rmiExporter.setAlwaysCreateRegistry(false);
+        rmiExporter.setRegistryPort(1999);
+        return rmiExporter;
+    }
+
+    @Bean
+    @Autowired
+    public RmiServiceExporter exportCreditApplicationService(CreditsApplicationService service){
+        RmiServiceExporter rmiExporter = new RmiServiceExporter();
+        rmiExporter.setServiceName(ICreditAplicatonService.SERVICE_NAME);
+        rmiExporter.setService(service);
+        rmiExporter.setServiceInterface(ICreditAplicatonService.class);
         rmiExporter.setAlwaysCreateRegistry(false);
         rmiExporter.setRegistryPort(1999);
         return rmiExporter;

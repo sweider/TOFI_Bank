@@ -2,7 +2,7 @@ package by.bsuir.sweider_b.banksystem.adminsclient.views.panels.credits;
 
 import by.bsuir.sweider_b.banksystem.adminsclient.AdministrationApp;
 import by.bsuir.sweider_b.banksystem.adminsclient.controllers.CurrentSessionHolder;
-import by.bsuir.sweider_b.banksystem.shared.services.credits.CreditShowObject;
+import by.bsuir.sweider_b.banksystem.shared.services.credits.CreditKindDO;
 import by.bsuir.sweider_b.banksystem.shared.services.credits.CreditUpdateException;
 import by.bsuir.sweider_b.banksystem.shared.services.credits.ICreditManagementService;
 import javafx.scene.control.Alert;
@@ -32,7 +32,7 @@ public class EditDescriptionPane extends VBox{
     private final Button updateBtn;
 
     private ArrayList<String> validationErrors;
-    private CreditShowObject data;
+    private CreditKindDO data;
 
     public EditDescriptionPane(){
         this.validationErrors = new ArrayList<>();
@@ -60,7 +60,7 @@ public class EditDescriptionPane extends VBox{
         this.blockControls(true);
         if(this.isValid()){
             try {
-                this.creditManagementService.updateCredit(this.sessionHolder.getSessionId(), this.data.getId(), this.descriptionArea.getText());
+                this.creditManagementService.updateCreditKind(this.sessionHolder.getSessionId(), this.data.getId(), this.descriptionArea.getText());
                 this.data.setDescription(this.descriptionArea.getText());
                 AdministrationApp.APP_CONTEXT.getBean(ShowCreditsPane.class).updateCredit(this.data);
                 this.showSuccessMsg();
@@ -119,7 +119,7 @@ public class EditDescriptionPane extends VBox{
     }
 
 
-    public void setData(CreditShowObject data){
+    public void setData(CreditKindDO data){
         this.data = data;
         this.descriptionArea.setText(data.getDescription());
     }

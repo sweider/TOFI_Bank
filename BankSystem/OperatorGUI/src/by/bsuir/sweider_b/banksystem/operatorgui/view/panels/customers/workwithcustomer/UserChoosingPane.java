@@ -30,8 +30,6 @@ public class UserChoosingPane extends VBox {
     @Autowired
     private CurrentSessionHolder sessionHolder;
 
-
-
     private TextField passportNumberField;
 
     private TextField nameField;
@@ -67,7 +65,6 @@ public class UserChoosingPane extends VBox {
         this.toggle.selectToggle(this.passportRadio);
 
         this.createUserShowNode();
-        //this.activatePassportBLock();
     }
 
     private void sendFindCustomerRequest() {
@@ -137,7 +134,10 @@ public class UserChoosingPane extends VBox {
     private void createUserShowNode() {
         Button creditBtn = new Button("Открыть заявку на кредит");
         creditBtn.setDisable(true);
-        //creditBtn.setOnMouseClicked();
+        creditBtn.setOnMouseClicked(event -> {
+            OperatorApp.APP_CONTEXT.getBean(WorkWithCustomerRootPane.class)
+                    .activateCreditChoosingPartForCustomer(this.customersShowTable.getSelectionModel().getSelectedItem().getBaseData());
+        });
 
         Button showApplicationsBtn = new Button("Просмотреть статусы заявок");
         showApplicationsBtn.setDisable(true);
@@ -189,8 +189,6 @@ public class UserChoosingPane extends VBox {
         }
         return this.validationErrors.isEmpty();
     }
-
-
 
     private void configureToggle() {
         this.toggle = new ToggleGroup();
@@ -263,5 +261,14 @@ public class UserChoosingPane extends VBox {
 
         hbox.getChildren().addAll(this.fioRadio, controls);
         return hbox;
+    }
+
+    protected void refresh(){
+        this.nameField.clear();
+        this.lastNameField.clear();
+        this.surnameField.clear();
+        this.passportNumberField.clear();
+        this.toggle.selectToggle(this.passportRadio);
+        this.getChildren().remove(this.userShowNode);
     }
 }

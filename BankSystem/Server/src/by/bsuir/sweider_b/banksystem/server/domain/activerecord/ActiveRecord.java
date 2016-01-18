@@ -40,6 +40,7 @@ public abstract class ActiveRecord {
     private int id;
 
 
+
     private static ThreadLocal<Optional<Session>> threadSession = new ThreadLocal<Optional<Session>>(){
         @Override
         protected Optional<Session> initialValue() {

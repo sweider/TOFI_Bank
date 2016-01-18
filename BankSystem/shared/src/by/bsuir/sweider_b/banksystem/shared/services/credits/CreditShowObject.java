@@ -36,6 +36,10 @@ public class CreditShowObject implements Serializable {
         return description;
     }
 
+    public void setDescription(String desc){
+        this.description = desc;
+    }
+
     public int getLenght() {
         return lenght;
     }

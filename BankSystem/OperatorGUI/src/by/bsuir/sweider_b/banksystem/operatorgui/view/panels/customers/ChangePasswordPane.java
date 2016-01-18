@@ -1,8 +1,9 @@
-package by.bsuir.sweider_b.banksystem.adminsclient.views.panels.employees;
+package by.bsuir.sweider_b.banksystem.operatorgui.view.panels.customers;
 
-import by.bsuir.sweider_b.banksystem.adminsclient.AdministrationApp;
-import by.bsuir.sweider_b.banksystem.adminsclient.controllers.CurrentSessionHolder;
-import by.bsuir.sweider_b.banksystem.shared.services.employee.IEmployeeManagementService;
+import by.bsuir.sweider_b.banksystem.operatorgui.OperatorApp;
+import by.bsuir.sweider_b.banksystem.operatorgui.controllers.CurrentSessionHolder;
+import by.bsuir.sweider_b.banksystem.shared.services.customers.CustomerUpdatingException;
+import by.bsuir.sweider_b.banksystem.shared.services.customers.ICustomersService;
 import by.bsuir.sweider_b.banksystem.shared.services.employee.UpdatingException;
 import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
@@ -22,8 +23,8 @@ import java.util.ArrayList;
  */
 @Component
 public class ChangePasswordPane extends VBox{
-    @Resource(name = "employeeManager")
-    private IEmployeeManagementService employeeManagementService;
+    @Resource(name = "customersService")
+    private ICustomersService customersService;
 
     @Autowired
     private CurrentSessionHolder sessionHolder;
@@ -73,14 +74,14 @@ public class ChangePasswordPane extends VBox{
         this.blockControls(true);
         if(this.isDataValid()){
             try {
-                this.employeeManagementService.changePasswordForEmployee(sessionHolder.getSessionId(),this.employeeId, this.pwdField.getText());
+                this.customersService.changePasswordForCustomer(sessionHolder.getSessionId(),this.employeeId, this.pwdField.getText());
                 this.showSuccessMsg();
                 this.clearState();
-                AdministrationApp.APP_CONTEXT.getBean(ShowUsersPanel.class).activateMainPane();
+                OperatorApp.APP_CONTEXT.getBean(ShowCustomersPanel.class).activateMainPane();
             } catch (RemoteException e) {
-                AdministrationApp.showRmiExceptionWarning();
+                OperatorApp.showRmiExceptionWarning();
                 e.printStackTrace();
-            } catch (UpdatingException e) {
+            } catch (CustomerUpdatingException e) {
                 showUpdatingErrorAlert(e);
             }
         }
@@ -98,10 +99,10 @@ public class ChangePasswordPane extends VBox{
         alert.showAndWait();
     }
 
-    private void showUpdatingErrorAlert(UpdatingException e) {
+    private void showUpdatingErrorAlert(CustomerUpdatingException e) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Ошибка");
-        alert.setHeaderText("Не удалось изменить пароль пользователя");
+        alert.setHeaderText("Не удалось изменить пароль клиента");
         alert.setContentText(e.getMessage());
         alert.showAndWait();
     }
@@ -110,7 +111,7 @@ public class ChangePasswordPane extends VBox{
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Ошибка");
         alert.setHeaderText("При заполнении формы были допущены ошибки");
-        String errorMsg = this.validationErrors.stream().reduce((s, s2) ->  s2 + s + "\n").get();
+        String errorMsg = this.validationErrors.stream().reduce((s, s2) ->  s2 + "\n" + s ).get();
         alert.setContentText(errorMsg);
         alert.showAndWait();
     }

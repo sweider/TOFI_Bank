@@ -38,6 +38,7 @@ public class NewUserPane extends BorderPane {
     private TextField lastNameField;
     private TextField surNameField;
     private TextField passportField;
+    private Button createBtn;
 
     public NewUserPane(){
         this.validationErrors = new ArrayList<>();
@@ -59,7 +60,7 @@ public class NewUserPane extends BorderPane {
 
         VBox confGroup = getConfGroup();
 
-        Button createBtn = new Button("Создать");
+        createBtn = new Button("Создать");
         createBtn.setDefaultButton(true);
         createBtn.setOnMouseClicked(event ->  sendCreateRequest());
 
@@ -222,5 +223,6 @@ public class NewUserPane extends BorderPane {
         this.lastNameField.setDisable(value);
         this.surNameField.setDisable(value);
         this.passportField.setDisable(value);
+        this.createBtn.setDisable(value);
     }
 }

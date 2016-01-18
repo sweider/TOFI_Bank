@@ -28,11 +28,12 @@ public class Employee extends ActiveRecord {
     @Enumerated(EnumType.STRING)
     private EmployeeRole role;
 
-    @Column(name = "is_active")
-    private boolean isActive;
 
     @OneToMany(mappedBy = "reviewCreator")
     private List<Review> reviews;
+
+    @Column(name =  "is_active")
+    private boolean isActive;
 
     private Employee(){}
 
@@ -40,7 +41,15 @@ public class Employee extends ActiveRecord {
         this.userCredentials = new UserCredentials(login, password);
         this.passportData = new PassportData(passportNmb, name,lastName,surname);
         this.role = role;
-        this.isActive = true;
+        this.setActive(true);
+    }
+
+    public boolean isActive(){
+        return this.isActive;
+    }
+
+    public void setActive(boolean value){
+        this.isActive = value;
     }
 
     public String getLogin(){
@@ -61,13 +70,6 @@ public class Employee extends ActiveRecord {
         return userCredentials;
     }
 
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public void setActive(boolean active) {
-        isActive = active;
-    }
 
     public void setRole(EmployeeRole role) {
         this.role = role;

@@ -61,6 +61,8 @@ public class EditDescriptionPane extends VBox{
         if(this.isValid()){
             try {
                 this.creditManagementService.updateCredit(this.sessionHolder.getSessionId(), this.data.getId(), this.descriptionArea.getText());
+                this.data.setDescription(this.descriptionArea.getText());
+                AdministrationApp.APP_CONTEXT.getBean(ShowCreditsPane.class).updateCredit(this.data);
                 this.showSuccessMsg();
                 this.returnToShow();
             } catch (RemoteException e) {

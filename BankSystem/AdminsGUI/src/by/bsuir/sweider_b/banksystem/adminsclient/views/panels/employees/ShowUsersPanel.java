@@ -1,8 +1,10 @@
 package by.bsuir.sweider_b.banksystem.adminsclient.views.panels.employees;
 
 import by.bsuir.sweider_b.banksystem.adminsclient.AdministrationApp;
+import by.bsuir.sweider_b.banksystem.adminsclient.controllers.CurrentSessionHolder;
 import by.bsuir.sweider_b.banksystem.shared.services.employee.EmployeeShowDO;
 import by.bsuir.sweider_b.banksystem.shared.services.employee.IEmployeeManagementService;
+import by.bsuir.sweider_b.banksystem.shared.services.employee.UpdatingException;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -26,6 +28,9 @@ import java.util.stream.Collectors;
 public class ShowUsersPanel extends BorderPane {
     @Resource(name = "employeeManager")
     private IEmployeeManagementService employeeManagementService;
+
+    @Autowired
+    private CurrentSessionHolder sessionHolder;
 
     @Autowired
     private ChangePasswordPane changePwdPane;
@@ -80,7 +85,7 @@ public class ShowUsersPanel extends BorderPane {
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         table.getColumns().addAll(nameColumn, lastNameColumn, loginColumn, roleColumn);
         contextMenu = getContextMenu(table);
-        
+
 
         table.setRowFactory(param -> {
             final TableRow<EmployeeDataForTable> row = new TableRow<>();
@@ -106,8 +111,7 @@ public class ShowUsersPanel extends BorderPane {
 
 
         MenuItem deactivate = new MenuItem("Деактивировать");
-        deactivate.setOnAction(event -> this.sendDeactivationRequest(table.getSelectionModel().getSelectedItem().getBaseData().getId()));
-
+        deactivate.setOnAction(event -> this.sendDeactivationRequest(table.getSelectionModel().getSelectedItem()));
 
         return new ContextMenu(changeData, changePwd, deactivate);
     }
@@ -125,8 +129,30 @@ public class ShowUsersPanel extends BorderPane {
         }
     }
 
-    private void sendDeactivationRequest(int employeeId){
-        new Alert(Alert.AlertType.ERROR, "Данный функционал еще не реализован").showAndWait();
+    private void sendDeactivationRequest(EmployeeDataForTable emp){
+        try {
+            this.employeeManagementService.setActiveState(this.sessionHolder.getSessionId(), emp.getBaseData().getId(), false);
+            this.tableView.getItems().remove(emp);
+            this.showSuccessChangeStateMsg();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            AdministrationApp.showRmiExceptionWarning();
+        } catch (UpdatingException e) {
+            e.printStackTrace();
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+            errorAlert.setHeaderText("Обновление не удалось");
+            errorAlert.setContentText(e.getMessage());
+            errorAlert.setTitle("Ошибка");
+            errorAlert.showAndWait();
+        }
+    }
+
+    private void showSuccessChangeStateMsg() {
+        Alert errorAlert = new Alert(Alert.AlertType.INFORMATION);
+        errorAlert.setHeaderText("Успех!");
+        errorAlert.setContentText("Состояние успешно изменено!");
+        errorAlert.setTitle("Завершено");
+        errorAlert.showAndWait();
     }
 
     private void showChangePwdForm(int id){

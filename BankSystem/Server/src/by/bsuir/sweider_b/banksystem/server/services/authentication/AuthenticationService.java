@@ -19,7 +19,7 @@ import java.util.Optional;
  */
 
 @Service
-public class AuthenticationService  implements ICustomerAuthenticationService, IAdminsAuthenticationService {
+public class AuthenticationService  implements ICustomerAuthenticationService, IAdminsAuthenticationService, IEmployeeAuthenticationService {
     @Autowired
     private BCryptPasswordEncoder ENCODER;
 
@@ -36,25 +36,34 @@ public class AuthenticationService  implements ICustomerAuthenticationService, I
                                                     .where(Restrictions.eq("uc.login", login), Restrictions.eq("uc.password", encodedPwd))
                                                     .first();
         Customer customer = optCustomer.orElseThrow(AuthenticationException::new);
-        String sessionId = ENCODER.encode("customer_" + login + encodedPwd);
-        this.sessionsExpirationService.putSession(sessionId);
-        this.sessionToUserService.putCustomer(sessionId, customer);
+        if(ENCODER.matches(password, customer.getUserCredentials().getPassword())) {
+            String sessionId = ENCODER.encode("customer_" + login + encodedPwd);
+            this.sessionsExpirationService.putSession(sessionId);
+            this.sessionToUserService.putCustomer(sessionId, customer);UserDetails userDetails = new UserDetails(customer.getCustomerInfo().getPassportData().getName());
+            return new AuthenticationResult(sessionId,userDetails);
+        }
+        else{
+            throw new AuthenticationException();
+        }
 
-        UserDetails userDetails = new UserDetails(customer.getCustomerInfo().getPassportData().getName());
-        return new AuthenticationResult(sessionId,userDetails);
     }
 
-    public AuthenticationResult authenticateEmployee(final String login, final String password) throws AuthenticationException {
+    public AuthenticationResult authenticateOperator(final String login, final String password) throws AuthenticationException {
         String encodedPwd = ENCODER.encode(password);
         Optional<Employee> optEmployee = Employee.filter()
                 .aliasses(new SimpleEntry<>("userCredentials", "uc"))
-                .where(Restrictions.eq("uc.login", login), Restrictions.eq("uc.password", encodedPwd))
+                .where(Restrictions.eq("uc.login", login), Restrictions.eq("role", EmployeeRole.OPERATOR))
                 .first();
         Employee employee = optEmployee.orElseThrow(AuthenticationException::new);
-        String sessionId = ENCODER.encode("employee_" + login + encodedPwd);
-        this.sessionsExpirationService.putSession(sessionId);
-        this.sessionToUserService.putEmployee(sessionId, employee);
-        return new AuthenticationResult(sessionId, new UserDetails("Employee"));
+        if(ENCODER.matches(password, employee.getPassword())) {
+            String sessionId = ENCODER.encode(employee.getRole().getUserFriendlyName() + login + encodedPwd);
+            this.sessionsExpirationService.putSession(sessionId);
+            this.sessionToUserService.putEmployee(sessionId, employee);
+            return new AuthenticationResult(sessionId, new UserDetails(employee.getLogin()));
+        }
+        else{
+            throw new AuthenticationException();
+        }
     }
 
     @Override
@@ -66,7 +75,7 @@ public class AuthenticationService  implements ICustomerAuthenticationService, I
                 .first();
         Employee employee = optEmployee.orElseThrow(AuthenticationException::new);
         if(ENCODER.matches(password, employee.getPassword())) {
-            String sessionId = ENCODER.encode("employee_" + login + encodedPwd);
+            String sessionId = ENCODER.encode(employee.getRole().getUserFriendlyName() + login + encodedPwd);
             this.sessionsExpirationService.putSession(sessionId);
             this.sessionToUserService.putEmployee(sessionId, employee);
             return new AuthenticationResult(sessionId, new UserDetails(employee.getLogin()));

@@ -37,6 +37,7 @@ public class CreditKind extends ActiveRecord{
     @Column(name = "is_active")
     private boolean isActive;
 
+
     private CreditKind(){}
 
     public CreditKind(String name, String description, int durationInMonth, long minAmount, long maxAmount, boolean isPrepaymentAllowed, PaymentType paymentType){
@@ -47,7 +48,15 @@ public class CreditKind extends ActiveRecord{
         this.minMoneyAmount = minAmount;
         this.isPrepaymentAllowed = isPrepaymentAllowed;
         this.paymentType = paymentType;
-        this.isActive = true;
+        this.setActive(true);
+    }
+
+    public boolean isActive(){
+        return this.isActive;
+    }
+
+    public void setActive(boolean value){
+        this.isActive = value;
     }
 
     public String getName() {
@@ -82,14 +91,6 @@ public class CreditKind extends ActiveRecord{
         this.description = desc;
     }
 
-
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public void setActive(boolean active) {
-        isActive = active;
-    }
 
     public static Filter<CreditKind> filter(){
         return ActiveRecord.filter(CreditKind.class);

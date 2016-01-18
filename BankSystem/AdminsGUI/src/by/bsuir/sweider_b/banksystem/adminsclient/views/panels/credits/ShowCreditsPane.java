@@ -123,6 +123,16 @@ public class ShowCreditsPane extends BorderPane {
         return new MenuItem[]{changeData, changeState};
     }
 
+    public void updateCredit(CreditShowObject data){
+        for(CreditDataForTable item : this.tableView.getItems()){
+            if(item.getBaseData().getId() == data.getId()){
+                item.initProperties(data);
+                break;
+            }
+        }
+
+    }
+
     private void showChangeDataForm(CreditShowObject baseData) {
         this.editDescriptionPane.setData(baseData);
         this.setCenter(null);
@@ -169,6 +179,10 @@ public class ShowCreditsPane extends BorderPane {
         private CreditShowObject baseData;
 
         public CreditDataForTable(CreditShowObject data) {
+            initProperties(data);
+        }
+
+        private void initProperties(CreditShowObject data) {
             this.name = new SimpleStringProperty(data.getTitle());
             this.minAmount = new SimpleLongProperty(data.getMin());
             this.length = new SimpleIntegerProperty(data.getLenght());
@@ -176,6 +190,11 @@ public class ShowCreditsPane extends BorderPane {
             this.maxAmount = new SimpleLongProperty(data.getMax());
             this.count = new SimpleIntegerProperty(data.getCount());
             this.baseData = data;
+        }
+
+        public void updateBaseData(CreditShowObject baseData) {
+            this.initProperties(baseData);
+
         }
 
         public int getCount() {

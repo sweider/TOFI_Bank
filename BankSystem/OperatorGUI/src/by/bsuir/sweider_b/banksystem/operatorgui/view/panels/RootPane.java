@@ -1,6 +1,6 @@
-package by.bsuir.sweider_b.banksystem.adminsclient.views.panels;
+package by.bsuir.sweider_b.banksystem.operatorgui.view.panels;
 
-import by.bsuir.sweider_b.banksystem.adminsclient.views.components.LeftMenu;
+import by.bsuir.sweider_b.banksystem.operatorgui.view.components.LeftMenu;
 import javafx.scene.layout.BorderPane;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

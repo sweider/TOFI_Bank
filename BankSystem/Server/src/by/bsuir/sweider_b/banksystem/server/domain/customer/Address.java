@@ -23,6 +23,15 @@ public class Address extends ActiveRecord {
     @Column(name = "room")
     private String room;
 
+    private Address() {
+    }
+
+    public Address(String city, String street, String building, String room) {
+        this.city = city;
+        this.street = street;
+        this.building = building;
+        this.room = room;
+    }
 
     public String getCity() {
         return city;
